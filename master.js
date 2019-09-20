@@ -55,7 +55,7 @@ app.get('/inicio', function(req, res){
 
     	
 function BD2(){
-	console.log("bd2");
+	//console.log("bd2");
 	var connection;
 	async function run(){
 		try{
