@@ -156,7 +156,26 @@ io.sockets.on('connection', function(socket) {
 							var json =  JSON.parse(string);
 							io.sockets.emit('minombre', {nombre: json[1], id:json[0]});
 							
-						}					
+						}
+						
+						//Conecta();
+						var sql = "SELECT * FROM PROYECTO";
+						result = await connection.execute(sql);
+						var a; var respuesta='';
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0];
+						}
+
+						if(respuesta!=""){
+							console.log("mi servicio 2");
+							io.sockets.emit('miServicio2', result);
+						} else {
+							console.log("conecta");
+							Conecta();
+						}
+
 					} else if(consulta=="4"){
 						var respuesta="";
 						var sql = "SELECT * FROM PROYECTO";
@@ -229,7 +248,7 @@ io.sockets.on('connection', function(socket) {
 						}
 												
 					}  else if(consulta=="5"){
-						var respuesta="";
+						var respuesta=""; 
 						var sql = "SELECT * FROM empleado WHERE empleado='"+emp+"' AND proyecto='"+data.proyecto+'" ';
 						result = await connection.execute(sql);
 						var a;
@@ -240,7 +259,8 @@ io.sockets.on('connection', function(socket) {
 						}
 
 						if(respuesta==""){
-							let result = await connection.execute(
+							//var result;
+							result = await connection.execute(
 								`INSERT INTO PROYECTO (EMPLEADO,TIPO_DOCUMENTO,
 									NUMERO_DOCUMENTO,NOMBRE_EMPLEADO,APELLIDO_EMPLEADO,
 									CARGO_EMPLEADO,AREA_EMPLEADO,FECHA_INGRESO,FECHA_CESE,PROVISIONES_EMPLEADO,
@@ -255,8 +275,8 @@ io.sockets.on('connection', function(socket) {
 									data.cargo, data.area, data.fechaIngreso, data.fechaCese, data.provisiones, 
 									data.sueldo, data.costo, data.estado, data.cargo_r, data.area_r],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
-
-							let result = await connection.execute(
+							//var result3;		
+							result = await connection.execute(
 								`INSERT INTO EMPLEADO_PROYECTO (EMPLEADO,PROYECTO) 
 								VALUES (:EMPLEADO, :PROYECTO)`,
 								[data.empleado, data.proyecto],{ autoCommit: true});
@@ -1071,7 +1091,7 @@ io.sockets.on('connection', function(socket) {
 	socket.on('busca nombre', function(data) {
 		//BD("3",data);
 		BD2("3",data);
-		Conecta();
+		//Conecta();
     });
 
 

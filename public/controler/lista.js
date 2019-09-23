@@ -3,6 +3,7 @@ var $resultServices="";
 var $miSuperId="";
 var socket = io.connect();
 var bboton = document.getElementById("bbuscar");
+var filtrado = "";
 	
 MainApp();
 
@@ -51,7 +52,31 @@ function init(){
 			}
 			
 		}
+		filtrado = "miServicio";
 		socket.emit("listaProyectos",$resultServices);
+		$("#mgif").hide();
+	});
+
+	socket.on("miServicio2",function(data){
+		$resultServices = data.rows;
+		var respuesta;
+		var a;
+		for(a=0; a<data.rows.length; a++){
+			var string=JSON.stringify(data.rows[a]);
+			var json =  JSON.parse(string);
+			console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
+			if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
+				respuesta = respuesta + ListaProyectos({codigo:json[0],
+													descripcion:json[2],
+													codunidad:json[3],
+													unidad:json[4],
+													id:$miSuperId});
+
+				document.getElementById("contenidop1").innerHTML = respuesta;
+
+			}
+		}
+		filtrado = "miServicio2";
 		$("#mgif").hide();
 	});
 
@@ -60,12 +85,13 @@ function init(){
 
 function Bbuscar(){
 	var busqueda = $("#tbuscar").val();
-		
-				var data4,data5,codigo,descr,unidad,nomunidad;
+	$("#mgif").show();
+		if(filtrado=="miServicio"){
+			var data4,data5,codigo,descr,unidad,nomunidad;
 				var ext = $resultServices.length;
 				console.log("ext "+ext);
 				var respuesta;
-				$("#mgif").show();
+				
 				for(i =0; i<ext; i++){
 					var a;
 					data4 = JSON.stringify($resultServices[i]);
@@ -100,6 +126,29 @@ function Bbuscar(){
 					
 				}
 				$("#mgif").hide();
+		} else {
+			$resultServices = data.rows;
+			var respuesta;
+			var a;
+			for(a=0; a<data.rows.length; a++){
+				var string=JSON.stringify(data.rows[a]);
+				var json =  JSON.parse(string);
+				console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
+				if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
+					respuesta = respuesta + ListaProyectos({codigo:json[0],
+														descripcion:json[2],
+														codunidad:json[3],
+														unidad:json[4],
+														id:$miSuperId});
+
+					document.getElementById("contenidop1").innerHTML = respuesta;
+
+				}
+			}
+			filtrado = "miServicio2";
+			$("#mgif").hide();
+		}
+				
 }
 
 function ListaProyectos(xdata){
@@ -111,9 +160,9 @@ function ListaProyectos(xdata){
 	unidad = xdata.unidad;
 	codunidad = xdata.codunidad;
 	mid = xdata.id;
-
-	var nom = descr.replace("_"," ");
-	
+	console.log('c: '+codigo +" "+descr+" "+unidad+" "+codunidad+"#");
+	//var nom = descr.replace("_"," ");
+	var nom = descr;
 	//console.log('c: '+codigo +" "+descr+" "+unidad+" "+codunidad+"#");
 	if(codunidad=="UNINF"){
 		grafico = '#7FD986';
