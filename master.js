@@ -55,8 +55,7 @@ app.get('/inicio', function(req, res){
 
     	
 function BD2(){
-	//console.log("bd2");
-	//para verificar
+	
 	var connection;
 	async function run(){
 		try{
@@ -66,23 +65,19 @@ function BD2(){
 				connectString: "dscope.cosapi.com.pe/desa"
 			});
 
-			result = await connection.execute('SELECT nombre_empleado FROM EMPLEADO');
+			result = await connection.execute('SELECT * FROM EMPLEADO');
 
-			console.log("Result 1: "+ result.metaData);
-			//console.log("Result is: "+ result.metaData['rows']);
-			var string=JSON.stringify(result.rows[0]);
 			
-			console.log("Result 2: "+ string);
-			
-			var json =  JSON.parse(string);
-			console.log("Result 3: "+ json);
-			//console.log("Result 3: "+ string2);
-			var i; 
-            var nombre;
-			for(i =0; i<json.length; i++){
-				nombre = json[i];
-				console.log("Result "+i+": "+ nombre);
+			var a;
+			for(a=0; a<result.rows.length; a++){
+				var string=JSON.stringify(result.rows[a]);
+				var json =  JSON.parse(string);
+
+				console.log("Result master "+a+": "+ json);
+				console.log("Result hijos: "+ json[3] + " - " + json[4]);
+				
 			}
+			
 		} catch(err){
 			console.error(err.message);
 		} finally{
@@ -105,118 +100,82 @@ function BD2(){
 //Se ha establecido conexión
 io.sockets.on('connection', function(socket) {
     
-    
-		BD2();
-
-		
-
-    	function BD(consulta,data){
-    		
-    		var con = mysql.createConnection({
-	              host: "localhost",
-	              user: "root",
-	              password: "",
-	              database: "costos"
-	            });
-
-    		con.connect(function(err) {
-    			if(consulta=="0"){
-                    
-    				con.query("SELECT * FROM empresa  ", function (err, result, fields) {
-			                if (err) throw err;
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-			                var i; 
-                            var idEmp="";
-                            var nomEmp="";
-			                for(i =0; i<json.length; i++){
+		function BD2(consulta,data){
+	
+			var connection;
+			async function run(){
+				try{
+					connection = await oracledb.getConnection({
+						user: 'RO',
+						password: mypw,
+						connectString: "dscope.cosapi.com.pe/desa"
+					});
 					
-			                	idEmp = json[i].id;
-                                nomEmp = json[i].nombre;
-                                io.sockets.emit('envio empresa', {id: idEmp, nombre: nomEmp});
-                                console.log('item '+i+": "+idEmp+" - "+nomEmp);
-			                	
-			                }
-                             
-                            
-			              });
-    			} else if(consulta=="1"){
-                    
-    				con.query("SELECT * FROM obra  ", function (err, result, fields) {
-							if (err) throw err;
-							
-							console.log("result "+result);
-
-
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-			                var i; 
-                            var nombre, costo, responsable, funcion;
-                            
-			                for(i =0; i<json.length; i++){
-                                nombre = json[i].nomarea;
-                                costo = json[i].costo;
-			                	responsable = json[i].nombre+" "+json[i].apellido;
-                                funcion = json[i].funcionnom;
-                                io.sockets.emit('envio obra', {nombre: nombre, costo: costo, responsable: responsable, funcion: funcion});
-                                
-			                	
-			                }
-                             
-                            
-						  });
-					
-				}  else if(consulta=="2"){
-					var usuario = data.usuario;
-					var password = data.password;
-					console.log("usuario: "+usuario+" - contraseña: "+password);
-					var consultaQ = "SELECT * FROM usuarios WHERE miusuario= ? AND mipassword = ?";
-					
-					con.query(consultaQ,[usuario,password], function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-			                var mnombre, mid, i;
-                            for(i =0; i<json.length; i++){
-								mnombre = json[i].nombre;
-								mid = json[i].id;
-							}
-
-							if(mnombre!=null){
+					if(consulta=="0"){
+						
+						result = await connection.execute('SELECT * FROM EMPLEADO');
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+			
+							console.log("Result master "+a+": "+ json);
+							console.log("Result hijos: "+ json[0] + " - " + json[3]);
+							io.sockets.emit('envio empresa', {id: json[0], nombre: json[3]});
+						}
+						
+					} else if(consulta=="2"){
+						var usuario = data.usuario;
+						var password = data.password;
+						var sql = "SELECT * FROM USUARIO WHERE TELEFONO = '"+password+"' AND USERNAME = '"+usuario+"'";
+						console.log(usuario + " - " + password + "\n"+sql);
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+			
+							if(json[1]!=null){
 									
-								io.sockets.emit('validacion', {nombre: mnombre, id:mid, resultado:"ok"});
+								io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"ok"});
 								
 							} else {
-								io.sockets.emit('validacion', {nombre: mnombre, id:mid, resultado:"no ok"});
+								io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"no ok"});
 							
 							}
-			                
-								
-						  });
-					
-    			} else if(consulta=="3"){
-					var usuario = data.usuario;
-					var consultaQ = "SELECT * FROM usuarios WHERE id= ? ";
-					
-					con.query(consultaQ,[usuario], function (err, result, fields) {
-							if (err) throw err;
+						}
+
+											
+					} else if(consulta=="3"){
+						var usuario = data.usuario;
+						var sql = "SELECT * FROM USUARIO WHERE USUARIO = '"+usuario+"'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							io.sockets.emit('minombre', {nombre: json[1], id:json[0]});
 							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-			                var mnombre, mid, i;
-                            for(i =0; i<json.length; i++){
-								mnombre = json[i].nombre;
-								mid = json[i].id;
-							}
-							console.log("nom usu"+mnombre);
-							io.sockets.emit('minombre', {nombre: mnombre, id:mid});
-								
-						  });
-					
-    			} else if(consulta=="4"){
-					//var usuario = data.usuario;
-					var consultaQ = "SELECT * FROM proyecto ";
+						}					
+					} else if(consulta=="4"){
+						var usuario = data.usuario;
+						var sql = "SELECT * FROM PROYECTO";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = respuesta + json[0]+"#";
+						}
+						console.log("respuesta: "+respuesta);
+						var ext = data.length;
+						console.log("ext "+ext);
+						var codigo,descr1,descr2,codunidad,nomunidad,cliente,participacion,supervisor,moneda;
+						var fechai,fechaf;
+												
+					}
+					/**
+					 * var consultaQ = "SELECT * FROM proyecto ";
 					
 					con.query(consultaQ, function (err, result, fields) {
 							if (err) throw err;
@@ -248,7 +207,7 @@ io.sockets.on('connection', function(socket) {
 									descr1="";
 									descr2=data5['DESCR']['$value'];
 									//participacion = data5['PARTICIPATION_PCT'];
-									/*ojo hay valores de cliente y participacion que son object*/
+									//ojo hay valores de cliente y participacion que son object
 									
 									//cliente = data5['NAME2'];
 									cliente = '';
@@ -287,6 +246,45 @@ io.sockets.on('connection', function(socket) {
 								}
 							}
 						  });
+					
+					 */
+				} catch(err){
+					console.error(err.message);
+				} finally{
+					if(connection){
+						try{
+							await connection.close();
+						} catch(err){
+							console.error(err.message);
+						}
+					}
+				}
+				
+			}
+		
+			run();
+		}  
+
+    	function BD(consulta,data){
+    		
+    		var con = mysql.createConnection({
+	              host: "localhost",
+	              user: "root",
+	              password: "",
+	              database: "costos"
+	            });
+
+    		con.connect(function(err) {
+    			if(consulta=="0"){
+
+    			} else if(consulta=="1"){
+                    					
+				}  else if(consulta=="2"){
+					
+    			} else if(consulta=="3"){
+					
+    			} else if(consulta=="4"){
+					//var usuario = data.usuario;
 					
     			}  else if(consulta=="5"){
 					//var usuario = data.usuario;
@@ -1105,21 +1103,24 @@ io.sockets.on('connection', function(socket) {
 		
 		    
     socket.on('consulta', function(data) {
-        BD(data.id,data.emp);
+		//BD(data.id,data.emp);
+		BD2(data.id,data.emp);
 	});
 	
 	socket.on('login', function(data) {
-        BD("2",data);
+		//BD("2",data);
+		BD2("2",data);
 	});
 
 	socket.on('busca nombre', function(data) {
-		BD("3",data);
+		//BD("3",data);
+		BD2("3",data);
 		Conecta();
     });
 
 
 	socket.on('listaProyectos', function(data) {
-        BD("4",data);
+        BD2("4",data);
 	});
 
 	socket.on('GuardaEmpleadoProyecto', function(data) {
