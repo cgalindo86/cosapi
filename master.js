@@ -158,7 +158,7 @@ io.sockets.on('connection', function(socket) {
 							
 						}					
 					} else if(consulta=="4"){
-						var usuario = data.usuario;
+						var respuesta="";
 						var sql = "SELECT * FROM PROYECTO";
 						result = await connection.execute(sql);
 						var a;
@@ -167,128 +167,65 @@ io.sockets.on('connection', function(socket) {
 							var json =  JSON.parse(string);
 							respuesta = respuesta + json[0]+"#";
 						}
-						console.log("respuesta: "+respuesta);
+						console.log("respuesta ",respuesta);
 						var ext = data.length;
 						console.log("ext "+ext);
 						var codigo,descr1,descr2,codunidad,nomunidad,cliente,participacion,supervisor,moneda;
 						var fechai,fechaf;
-												
-					}
-					/**
-					 * var consultaQ = "SELECT * FROM proyecto ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta;
-                            for(i =0; i<json.length; i++){
-								respuesta = respuesta + json[i].proyecto+"#";
-							}
-							console.log("respuesta: "+respuesta);
-							var ext = data.length;
-							console.log("ext "+ext);
-							var codigo,descr1,descr2,codunidad,nomunidad,cliente,participacion,supervisor,moneda;
-							var fechai,fechaf;
-							
-							for(i =0; i<ext; i++){
-								data4 = JSON.stringify(data[i]);					
-								data5 = JSON.parse(data4);
+
+						for(i =0; i<ext; i++){
+							data4 = JSON.stringify(data[i]);					
+							data5 = JSON.parse(data4);
+							codigo=data5['PROJECT_ID']['$value'];
+							if(respuesta.includes(codigo) && codigo!=null && data5['PROJECT_TYPE']!= null){
+								console.log("incluido ",codigo);
+							} else if(codigo!=null && data5['PROJECT_TYPE']!= null){
+								console.log("no incluido ",codigo);
+								respuesta = respuesta + codigo+"#";
 								codigo=data5['PROJECT_ID']['$value'];
-								if(respuesta.includes(codigo) && codigo!=null && data5['PROJECT_TYPE']!= null){
-									console.log("incluido ",codigo);
-								} else if(codigo!=null && data5['PROJECT_TYPE']!= null){
-									console.log("no incluido ",codigo);
-									codigo=data5['PROJECT_ID']['$value'];
-									codunidad=data5['PROJECT_TYPE']['$value'];
-									nomunidad = data5['DESCR1']['$value'];
-									descr1="";
-									descr2=data5['DESCR']['$value'];
-									//participacion = data5['PARTICIPATION_PCT'];
-									//ojo hay valores de cliente y participacion que son object
-									
-									//cliente = data5['NAME2'];
-									cliente = '';
-									participacion = "";
-									supervisor = "";
-									moneda = data5['CURRENCY_CD']['$value'];
-									fechai = data5['START_DT']['$value'];
-									fechaf = data5['END_DT']['$value'];
-									
-									if(codigo==null){ codigo="";}
-									if(codunidad==null){ codunidad="";}
-									if(nomunidad==null){ nomunidad="";}
-									if(descr1==null){ descr1="";}
-									if(descr2==null){ descr2="";}
-									if(cliente==null){ cliente="";}
-									if(participacion==null){ participacion="";}
-									if(supervisor==null){ supervisor="";}
-									if(moneda==null){ moneda="";}
-									if(fechai==null){ fechai="";}
-									if(fechaf==null){ fechaf="";}
+								codunidad=data5['PROJECT_TYPE']['$value'];
+								nomunidad = data5['DESCR1']['$value'];
+								descr1="";
+								descr2=data5['DESCR']['$value'];
+								//participacion = data5['PARTICIPATION_PCT'];
+								//ojo hay valores de cliente y participacion que son object
+								
+								//cliente = data5['NAME2'];
+								cliente = '';
+								participacion = "";
+								supervisor = "";
+								moneda = data5['CURRENCY_CD']['$value'];
+								fechai = data5['START_DT']['$value'];
+								fechaf = data5['END_DT']['$value'];
+								
+								if(codigo==null){ codigo="";}
+								if(codunidad==null){ codunidad="";}
+								if(nomunidad==null){ nomunidad="";}
+								if(descr1==null){ descr1="";}
+								if(descr2==null){ descr2="";}
+								if(cliente==null){ cliente="";}
+								if(participacion==null){ participacion="";}
+								if(supervisor==null){ supervisor="";}
+								if(moneda==null){ moneda="";}
+								if(fechai==null){ fechai="";}
+								if(fechaf==null){ fechaf="";}
 
-									descr2 = descr2.replace("'"," ");
-									
-									var sql = "INSERT INTO proyecto (proyecto,descripcion_corta,";
-									sql = sql + "descripcion_larga,unidad_negocio,descripcion_unidad_negocio,";
-									sql = sql + "nombre_cliente,participacion,nombre_supervision,moneda_proyecto,";
-									sql = sql + "fecha_inicio,fecha_fin) VALUES ('"+codigo+"','"+descr1+"','"+descr2+"',";
-									sql = sql + "'"+codunidad+"','"+nomunidad+"','"+cliente+"','"+participacion+"',";
-									sql = sql + "'"+supervisor+"','"+moneda+"','"+fechai+"','"+fechaf+"')";
-									con.query(sql, function (err, result) {
-										if (err) throw err;
-										console.log("1 record inserted");
-									});
-
-									
-								}
-							}
-						  });
-					
-					 */
-				} catch(err){
-					console.error(err.message);
-				} finally{
-					if(connection){
-						try{
-							await connection.close();
-						} catch(err){
-							console.error(err.message);
-						}
-					}
-				}
-				
-			}
-		
-			run();
-		}  
-
-    	function BD(consulta,data){
-    		
-    		var con = mysql.createConnection({
-	              host: "localhost",
-	              user: "root",
-	              password: "",
-	              database: "costos"
-	            });
-
-    		con.connect(function(err) {
-    			if(consulta=="0"){
-
-    			} else if(consulta=="1"){
-                    					
-				}  else if(consulta=="2"){
-					
-    			} else if(consulta=="3"){
-					
-    			} else if(consulta=="4"){
-					//var usuario = data.usuario;
-					
-    			}  else if(consulta=="5"){
-					//var usuario = data.usuario;
-					var emp = data.empleado;
+								descr2 = descr2.replace("'"," ");
+								
+								let result = await connection.execute(
+									`INSERT INTO PROYECTO (PROYECTO,DESCRIPCION_CORTA_PROYECTO,
+										DESCRPCION_LARGA_PROYECTO,UNIDAD_NEGOCIO,DESCRIPCION_UNIDAD_NEGOCIO,
+										NOMBRE_CLIENTE,PARTICIPACION,NOMBRE_SUPERVISION,MONEDA_PROYECTO,FECHA_INICIO,
+										FECHA_FIN,USUARIO_CREACION) 
+									VALUES (:PROYECTO, :DESCRIPCION_CORTA_PROYECTO, 
+										:DESCRPCION_LARGA_PROYECTO, :UNIDAD_NEGOCIO, :DESCRIPCION_UNIDAD_NEGOCIO,
+										:NOMBRE_CLIENTE, :PARTICIPACION, :NOMBRE_SUPERVISION, :MONEDA_PROYECTO, 
+										:FECHA_INICIO, :FECHA_FIN, :USUARIO_CREACION)`,
+									[codigo, descr1, descr2, codunidad, nomunidad, 
+										cliente, participacion, supervisor, moneda, fechai, fechaf, "admin"],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);  // 1
+								/**
+								 * var emp = data.empleado;
 					var consultaQ = "SELECT * FROM empleado WHERE empleado='"+emp+"' AND proyecto='"+data.proyecto+"' ";
 					
 					con.query(consultaQ, function (err, result, fields) {
@@ -386,9 +323,127 @@ io.sockets.on('connection', function(socket) {
 						}
 								  
 					});
+								 */
+							}
+						}
+												
+					}  else if(consulta=="5"){
+						var respuesta="";
+						var sql = "SELECT * FROM empleado WHERE empleado='"+emp+"' AND proyecto='"+data.proyecto+'" ';
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO PROYECTO (EMPLEADO,TIPO_DOCUMENTO,
+									NUMERO_DOCUMENTO,NOMBRE_EMPLEADO,APELLIDO_EMPLEADO,
+									CARGO_EMPLEADO,AREA_EMPLEADO,FECHA_INGRESO,FECHA_CESE,PROVISIONES_EMPLEADO,
+									SUELDO_BASICO,COSTO_TOTAL,ESTADO_EMPLEADO,USUARIO_CREACION,
+									FECHA_CREACION,CARGO_EMPLEADO_R,AREA_EMPLEADO_R) 
+								VALUES (:EMPLEADO, :TIPO_DOCUMENTO,
+									:NUMERO_DOCUMENTO, :NOMBRE_EMPLEADO, :APELLIDO_EMPLEADO,
+									:CARGO_EMPLEADO, :AREA_EMPLEADO, :FECHA_INGRESO, :FECHA_CESE, :PROVISIONES_EMPLEADO,
+									:SUELDO_BASICO, :COSTO_TOTAL, :ESTADO_EMPLEADO, 
+									:CARGO_EMPLEADO_R, :AREA_EMPLEADO_R)`,
+								[data.empleado, data.tipoDocumento, data.numeroDocumento, data.nombre, data.apellido, 
+									data.cargo, data.area, data.fechaIngreso, data.fechaCese, data.provisiones, 
+									data.sueldo, data.costo, data.estado, data.cargo_r, data.area_r],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+
+							let result = await connection.execute(
+								`INSERT INTO EMPLEADO_PROYECTO (EMPLEADO,PROYECTO) 
+								VALUES (:EMPLEADO, :PROYECTO)`,
+								[data.empleado, data.proyecto],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+						}
+						
+						var sql = "SELECT * FROM PROYECTO_PERIODO WHERE PROYECTO = '"+data.proyecto+"' AND PERIODO = '"+data.periodo+"'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO PROYECTO_PERIODO (PROYECTO,PERIODO,ESTADO,USUARIO_CREACION,FECHA_CREACION) 
+								VALUES (:PROYECTO,:PERIODO,:ESTADO,:USUARIO_CREACION,:FECHA_CREACION)`,
+								[data.proyecto, data.periodo, data.estado, data.usuario, data.fecha],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+						}
+
+						var sql = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' ";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+
+						if(respuesta==""){
+							var eperiodo='';
+							var ii;
+							for(ii=1; ii<=12; ii++){
+								if(ii<10){ eperiodo='0'; } else { eperiodo = ''; }
+								eperiodo = "2019" + eperiodo + ii;
+								let result = await connection.execute(
+									`INSERT INTO INCIDENCIA (PROYECTO,EMPLEADO,PERIODO) 
+									VALUES (:PROYECTO,:EMPLEADO,:PERIODO)`,
+									[data.proyecto, data.empleado, data.periodo],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);
+								
+							}
+							
+						}
+					}
 					
+				} catch(err){
+					console.error(err.message);
+				} finally{
+					if(connection){
+						try{
+							await connection.close();
+						} catch(err){
+							console.error(err.message);
+						}
+					}
+				}
+				
+			}
+		
+			run();
+		}  
+
+    	function BD(consulta,data){
+    		
+    		var con = mysql.createConnection({
+	              host: "localhost",
+	              user: "root",
+	              password: "",
+	              database: "costos"
+	            });
+
+    		con.connect(function(err) {
+    			if(consulta=="0"){
+
+    			} else if(consulta=="1"){
+                    					
+				}  else if(consulta=="2"){
 					
+    			} else if(consulta=="3"){
 					
+    			} else if(consulta=="4"){
+					//var usuario = data.usuario;
+    			}  else if(consulta=="5"){
+					//var usuario = data.usuario;
     			}  else if(consulta=="6"){
 					//var usuario = data.usuario;
 					var consultaQ = "SELECT * FROM proyecto_periodo WHERE proyecto='"+data.proyecto+"' AND periodo='"+data.periodo+"' ";
