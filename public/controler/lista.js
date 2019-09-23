@@ -127,10 +127,10 @@ function Bbuscar(){
 				}
 				$("#mgif").hide();
 		} else {
-			$resultServices = data.rows;
+			//$resultServices = data.rows;
 			var respuesta;
 			var a;
-			for(a=0; a<data.rows.length; a++){
+			for(a=0; a<$resultServices.rows.length; a++){
 				var string=JSON.stringify(data.rows[a]);
 				var json =  JSON.parse(string);
 				console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
@@ -145,7 +145,7 @@ function Bbuscar(){
 
 				}
 			}
-			filtrado = "miServicio2";
+			//filtrado = "miServicio2";
 			$("#mgif").hide();
 		}
 				
@@ -197,39 +197,64 @@ function UnidadesSelect(){
 	var data4,data5,codigo,descr,unidad,nomunidad;
 
 	if(x!="0"){
-		var ext = $resultServices.length;
-		console.log("ext "+ext);
-		var respuesta;
-		$("#mgif").show();
-		for(i =0; i<ext; i++){
+
+		if(filtrado=="miServicio"){
+			var ext = $resultServices.length;
+			console.log("ext "+ext);
+			var respuesta;
+			$("#mgif").show();
+			for(i =0; i<ext; i++){
+				var a;
+				data4 = JSON.stringify($resultServices[i]);
+				
+				data5 = JSON.parse(data4);
+				
+				codigo=data5['PROJECT_ID']['$value'];
+				descr=data5['DESCR']['$value'];
+				
+				if(data5['BUSINESS_UNIT']!=null){
+					unidad=data5['PROJECT_TYPE']['$value'];
+					nomunidad = data5['DESCR1']['$value'];
+				} else {
+					unidad="Sin info";
+					nomunidad="Sin info";
+				}
+
+				if(unidad.includes(x)){
+					respuesta = respuesta + ListaProyectos({codigo:codigo,
+														descripcion:descr,
+														codunidad:unidad,
+														unidad:nomunidad,
+														id:$miSuperId});
+
+					document.getElementById("contenidop1").innerHTML = respuesta;
+
+				}
+				
+			}
+		} else {
+			//$resultServices = data.rows;
+			var respuesta;
 			var a;
-			data4 = JSON.stringify($resultServices[i]);
-			
-			data5 = JSON.parse(data4);
-			
-			codigo=data5['PROJECT_ID']['$value'];
-			descr=data5['DESCR']['$value'];
-			
-			if(data5['BUSINESS_UNIT']!=null){
-				unidad=data5['PROJECT_TYPE']['$value'];
-				nomunidad = data5['DESCR1']['$value'];
-			} else {
-				unidad="Sin info";
-				nomunidad="Sin info";
+			for(a=0; a<$resultServices.rows.length; a++){
+				var string=JSON.stringify(data.rows[a]);
+				var json =  JSON.parse(string);
+				console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
+				if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
+					respuesta = respuesta + ListaProyectos({codigo:json[0],
+														descripcion:json[2],
+														codunidad:json[3],
+														unidad:json[4],
+														id:$miSuperId});
+
+					document.getElementById("contenidop1").innerHTML = respuesta;
+
+				}
 			}
-
-			if(unidad.includes(x)){
-				respuesta = respuesta + ListaProyectos({codigo:codigo,
-													descripcion:descr,
-													codunidad:unidad,
-													unidad:nomunidad,
-													id:$miSuperId});
-
-				document.getElementById("contenidop1").innerHTML = respuesta;
-
-			}
-			
+			//filtrado = "miServicio2";
+			$("#mgif").hide();
 		}
+		
 		$("#mgif").hide();
 	}
 }
