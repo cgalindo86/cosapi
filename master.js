@@ -368,6 +368,33 @@ io.sockets.on('connection', function(socket) {
 							respuesta = respuesta +json[7] + "#"+json[8] +"#%";
 						}
 						io.sockets.emit("ResultEmpleado",respuesta);
+					} else if(consulta=="8"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO ";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = respuesta + '<option value="'+json[0]+'">'+json[1] + "</option>";
+						}
+						io.sockets.emit("recibeArea",respuesta);
+					} else if(consulta=="9"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE EMPLEADO SET FECHA_INICIO = :FECHA_INICIO, FECHA_FIN = :FECHA_FIN, 
+							AREA_EMPLEADO = :AREA_EMPLEADO, AREA_EMPLEADO_R = :AREA_EMPLEADO_R 
+							WHERE EMPLEADO = :EMPLEADO`,
+							[data.fechaInicio,data.fechaFin,data.area,data.nombreArea,data.empleado],
+							{ autoCommit: true });  // commit once for all DML in the script
+						console.log("Rows updated: " + result.rowsAffected); // 2
+					  
+						result = await connection.execute(
+							`UPDATE EMPLEADO_PROYECTO SET FECHA_INICIO = :FECHA_INICIO, FECHA_FIN = :FECHA_FIN, 
+							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO`,
+							[data.fechaInicio,data.fechaFin,data.empleado,data.proyecto],
+							{ autoCommit: true });  // commit once for all DML in the script
+						console.log("Rows updated: " + result.rowsAffected); // 2
 					}
 					
 					
@@ -414,46 +441,7 @@ io.sockets.on('connection', function(socket) {
 					//var usuario = data.usuario;
     			}  else if(consulta=="7"){
 					//var usuario = data.usuario;
-					var consultaQ = "SELECT * FROM empleado WHERE empleado='"+data.codigo+"' OR numero_documento='"+data.documento+"' OR "+"nombre_empleado LIKE '%"+data.nombre+"%' "+" OR "+"apellido_empleado LIKE '%"+data.apellidos+"%' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta="";
-                            for(i =0; i<json.length; i++){
-								respuesta = json[i].empleado+"#"+json[i].apellido_empleado + " "+json[i].nombre_empleado +"#";
-								respuesta = respuesta +json[i].area_empleado + " "+json[i].area_empleado_r +"#";
-								respuesta = respuesta +json[i].fecha_ingreso + "#"+json[i].fecha_cese +"#%";
-							}
-							console.log("respuesta: "+respuesta);
-							io.sockets.emit("ResultEmpleado",respuesta);
-							
-						  });
-					
-					
-					
     			}  else if(consulta=="8"){
-					
-					var consultaQ = "SELECT * FROM area_empleado ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta='<option value="0">Seleccionar</option>';
-                            for(i =0; i<json.length; i++){
-								respuesta = respuesta + '<option value="'+json[i].area_empleado+'">'+json[i].descripcion_area + "</option>";
-								
-							}
-							console.log("respuestaArea: "+respuesta);
-							io.sockets.emit("recibeArea",respuesta);
-							
-						  });
 					
     			}  else if(consulta=="9"){
 					
