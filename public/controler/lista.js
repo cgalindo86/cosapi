@@ -1,5 +1,5 @@
 
-var $resultServices="";
+var $resultServices="",$resultServices2='';
 var $miSuperId="";
 var socket = io.connect();
 var bboton = document.getElementById("bbuscar");
@@ -58,13 +58,14 @@ function init(){
 	});
 
 	socket.on("miServicio2",function(data){
-		$resultServices = data.rows;
+		$resultServices2 = data;
+		console.log("entrada mi servicio 2",$resultServices2.rows[0]);
 		var respuesta;
 		var a;
 		for(a=0; a<data.rows.length; a++){
 			var string=JSON.stringify(data.rows[a]);
 			var json =  JSON.parse(string);
-			console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
+			//console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
 			if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
 				respuesta = respuesta + ListaProyectos({codigo:json[0],
 													descripcion:json[2],
@@ -130,8 +131,8 @@ function Bbuscar(){
 			//$resultServices = data.rows;
 			var respuesta;
 			var a;
-			for(a=0; a<$resultServices.rows.length; a++){
-				var string=JSON.stringify(data.rows[a]);
+			for(a=0; a<$resultServices2.rows.length; a++){
+				var string=JSON.stringify($resultServices2.rows[a]);
 				var json =  JSON.parse(string);
 				console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
 				if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
@@ -160,7 +161,7 @@ function ListaProyectos(xdata){
 	unidad = xdata.unidad;
 	codunidad = xdata.codunidad;
 	mid = xdata.id;
-	console.log('c: '+codigo +" "+descr+" "+unidad+" "+codunidad+"#");
+	//console.log('c: '+codigo +" "+descr+" "+unidad+" "+codunidad+"#");
 	//var nom = descr.replace("_"," ");
 	var nom = descr;
 	//console.log('c: '+codigo +" "+descr+" "+unidad+" "+codunidad+"#");
@@ -195,7 +196,7 @@ function ListaProyectos(xdata){
 function UnidadesSelect(){
 	var x = document.getElementById("unidadesN").value;
 	var data4,data5,codigo,descr,unidad,nomunidad;
-
+	console.log("select",x);
 	if(x!="0"){
 
 		if(filtrado=="miServicio"){
@@ -236,11 +237,16 @@ function UnidadesSelect(){
 			//$resultServices = data.rows;
 			var respuesta;
 			var a;
-			for(a=0; a<$resultServices.rows.length; a++){
-				var string=JSON.stringify(data.rows[a]);
+			//console.log("extension",$resultServices2.rows.length);
+			//console.log("un dato",$resultServices2.rows[0]);
+			for(a=0; a<$resultServices2.rows.length; a++){
+				var string=JSON.stringify($resultServices2.rows[a]);
+				//console.log("string",string);
 				var json =  JSON.parse(string);
-				console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
-				if(!json[0].includes("S8") && !json[0].includes("S9") && json[0]!=null){
+				//console.log("json - x",json[4]+" "+x);
+				if(json[3].includes(x)){
+					//console.log('c: '+json[0] +" "+json[2]+" "+json[4]+" "+json[3]+"#");
+
 					respuesta = respuesta + ListaProyectos({codigo:json[0],
 														descripcion:json[2],
 														codunidad:json[3],

@@ -476,6 +476,16 @@ function Ocultar(){
 	console.log("ocultar");
 }
 
+function Buscar(){
+	socket.emit("BuscaEmpleado",{
+		codigo: $("#bcodigo").val(), 
+		documento: $("#bdocumento").val(),
+		nombre:$("#bnombre").val(),
+		apellidos:$("#bapellidos").val()
+	});
+}
+
+
 function CallService($miProyecto,$filtro){
 		console.log("proy "+$miProyecto);
 		$("#mgif").show();

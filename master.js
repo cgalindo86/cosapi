@@ -249,28 +249,30 @@ io.sockets.on('connection', function(socket) {
 												
 					}  else if(consulta=="5"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM empleado WHERE empleado='"+emp+"' AND proyecto='"+data.proyecto+'" ';
+						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO='"+data.empleado+"' " ;
+						
+						console.log("SQL",sql);
+						
 						result = await connection.execute(sql);
 						var a;
+						respuesta = '';
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
 							respuesta = json[0]+"";
 						}
-
+						console.log("respuesta",respuesta);
 						if(respuesta==""){
 							//var result;
 							result = await connection.execute(
-								`INSERT INTO PROYECTO (EMPLEADO,TIPO_DOCUMENTO,
+								`INSERT INTO EMPLEADO (EMPLEADO,TIPO_DOCUMENTO,
 									NUMERO_DOCUMENTO,NOMBRE_EMPLEADO,APELLIDO_EMPLEADO,
 									CARGO_EMPLEADO,AREA_EMPLEADO,FECHA_INGRESO,FECHA_CESE,PROVISIONES_EMPLEADO,
-									SUELDO_BASICO,COSTO_TOTAL,ESTADO_EMPLEADO,USUARIO_CREACION,
-									FECHA_CREACION,CARGO_EMPLEADO_R,AREA_EMPLEADO_R) 
+									SUELDO_BASICO,COSTO_TOTAL,ESTADO_EMPLEADO,CARGO_EMPLEADO_R,AREA_EMPLEADO_R) 
 								VALUES (:EMPLEADO, :TIPO_DOCUMENTO,
 									:NUMERO_DOCUMENTO, :NOMBRE_EMPLEADO, :APELLIDO_EMPLEADO,
 									:CARGO_EMPLEADO, :AREA_EMPLEADO, :FECHA_INGRESO, :FECHA_CESE, :PROVISIONES_EMPLEADO,
-									:SUELDO_BASICO, :COSTO_TOTAL, :ESTADO_EMPLEADO, 
-									:CARGO_EMPLEADO_R, :AREA_EMPLEADO_R)`,
+									:SUELDO_BASICO, :COSTO_TOTAL, :ESTADO_EMPLEADO, :CARGO_EMPLEADO_R, :AREA_EMPLEADO_R)`,
 								[data.empleado, data.tipoDocumento, data.numeroDocumento, data.nombre, data.apellido, 
 									data.cargo, data.area, data.fechaIngreso, data.fechaCese, data.provisiones, 
 									data.sueldo, data.costo, data.estado, data.cargo_r, data.area_r],{ autoCommit: true});
@@ -286,6 +288,7 @@ io.sockets.on('connection', function(socket) {
 						var sql = "SELECT * FROM PROYECTO_PERIODO WHERE PROYECTO = '"+data.proyecto+"' AND PERIODO = '"+data.periodo+"'";
 						result = await connection.execute(sql);
 						var a;
+						respuesta = '';
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
@@ -300,7 +303,37 @@ io.sockets.on('connection', function(socket) {
 							console.log("Rows inserted: " + result.rowsAffected);
 						}
 
-						var sql = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' ";
+						
+						var sql2 = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' ";
+						console.log("previo incidencia",sql2);
+						result = await connection.execute(sql2);
+						var a;
+						respuesta = '';
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+						console.log("luego incidencia",respuesta);
+						if(respuesta==""){
+							var eperiodo='';
+							var ii;
+							for(ii=1; ii<=12; ii++){
+								if(ii<10){ eperiodo='0'; } else { eperiodo = ''; }
+								eperiodo = "2019" + eperiodo + ii;
+								console.log(eperiodo);
+								result = await connection.execute(
+									`INSERT INTO INCIDENCIA (PROYECTO,EMPLEADO,PERIODO) 
+									VALUES (:PROYECTO,:EMPLEADO,:PERIODO)`,
+									[data.proyecto, data.empleado, eperiodo],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);
+								
+							}
+							
+						}
+					} else if(consulta=="6"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM PROYECTO_PERIODO WHERE PROYECTO = '"+data.proyecto+"' AND PERIODO = '"+data.periodo+"'";
 						result = await connection.execute(sql);
 						var a;
 						for(a=0; a<result.rows.length; a++){
@@ -309,22 +342,34 @@ io.sockets.on('connection', function(socket) {
 							respuesta = json[0]+"";
 						}
 
+
 						if(respuesta==""){
-							var eperiodo='';
-							var ii;
-							for(ii=1; ii<=12; ii++){
-								if(ii<10){ eperiodo='0'; } else { eperiodo = ''; }
-								eperiodo = "2019" + eperiodo + ii;
-								let result = await connection.execute(
-									`INSERT INTO INCIDENCIA (PROYECTO,EMPLEADO,PERIODO) 
-									VALUES (:PROYECTO,:EMPLEADO,:PERIODO)`,
-									[data.proyecto, data.empleado, data.periodo],{ autoCommit: true});
-								console.log("Rows inserted: " + result.rowsAffected);
-								
-							}
-							
+							let result = await connection.execute(
+								`INSERT INTO PROYECTO_PERIODO (PROYECTO,PERIODO,ESTADO,USUARIO_CREACION,FECHA_CREACION) 
+								VALUES (:PROYECTO,:PERIODO,:ESTADO,:USUARIO_CREACION,:FECHA_CREACION)`,
+								[data.proyecto, data.periodo, data.estado, data.usuario, data.fecha],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							io.sockets.emit("DatosProyecto",{proyecto:"", periodo: ""});
+						} else {
+							io.sockets.emit("DatosProyecto",{proyecto:json[0].proyecto, periodo: json[0].periodo});
 						}
+
+						
+					}  else if(consulta=="7"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO = '"+data.codigo+"' OR NUMERO_DOCUMENTO = '"+data.documento+"' OR NOMBRE_EMPLEADO LIKE '%"+data.nombre+"%' OR APELLIDO_EMPLEADO LIKE '%"+data.apellidos+"%'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"#"+json[4] + " "+json[3] +"#";
+							respuesta = respuesta +json[6] + " "+json[19] +"#";
+							respuesta = respuesta +json[7] + "#"+json[8] +"#%";
+						}
+						io.sockets.emit("ResultEmpleado",respuesta);
 					}
+					
 					
 				} catch(err){
 					console.error(err.message);
@@ -367,37 +412,6 @@ io.sockets.on('connection', function(socket) {
 					//var usuario = data.usuario;
     			}  else if(consulta=="6"){
 					//var usuario = data.usuario;
-					var consultaQ = "SELECT * FROM proyecto_periodo WHERE proyecto='"+data.proyecto+"' AND periodo='"+data.periodo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta="";
-                            for(i =0; i<json.length; i++){
-								respuesta = json[i].proyecto;
-							}
-							console.log("respuesta: "+respuesta);
-							
-							if(respuesta==""){
-								var sql = "INSERT INTO proyecto_periodo (proyecto,periodo,estado,";
-								sql = sql + "usuario_creacion,fecha_creacion) VALUES ('"+data.proyecto+"','"+data.periodo+"','"+data.estado+"',";
-								sql = sql + "'"+data.usuario+"','"+data.fecha+"')";
-								con.query(sql, function (err, result) {
-									if (err) throw err;
-									console.log("1 record inserted");
-								});
-								io.sockets.emit("DatosProyecto",{proyecto:"", periodo: ""});
-							} else {
-								io.sockets.emit("DatosProyecto",{proyecto:json[0].proyecto, periodo: json[0].periodo});
-							}
-							
-						  });
-					
-					
-					
     			}  else if(consulta=="7"){
 					//var usuario = data.usuario;
 					var consultaQ = "SELECT * FROM empleado WHERE empleado='"+data.codigo+"' OR numero_documento='"+data.documento+"' OR "+"nombre_empleado LIKE '%"+data.nombre+"%' "+" OR "+"apellido_empleado LIKE '%"+data.apellidos+"%' ";
@@ -1100,11 +1114,11 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('GuardaEmpleadoProyecto', function(data) {
-        BD("5",data);
+        BD2("5",data);
 	});
 
 	socket.on('ConsultaProyecto', function(data) {
-        BD("6",data);
+        BD2("6",data);
 	});
 
 	socket.on('BuscaEmpleado', function(data) {
