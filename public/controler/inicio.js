@@ -580,18 +580,7 @@ function CallService($miProyecto,$filtro){
 						tabla = tabla+'<td>'+data[i]["FuncionNombre"]+'</td>';
 						tabla = tabla+'<td>'+pickeri+'</td>';
 						tabla = tabla+'<td>'+pickerf+'</td></tr>';
-						/*
-						<div class="form-group">
-						<div class="input-group">
-						<span class="input-group-prepend">
-						<span class="input-group-text"><i class="icon-calendar22"></i></span>
-						</span>
-						<input type="text" id="" class="form-control daterange-single">
-						</div>
-						</div>
-						data[i]["EmpleadoCodigo"]
-						*/
-						//FuncionNombre
+						
 					}
 					tabla = tabla+'</tbody></table>';
 					$tablaEmpleado = tabla;

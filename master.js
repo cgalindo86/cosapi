@@ -450,42 +450,86 @@ io.sockets.on('connection', function(socket) {
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
 						}
-						console.log("reEmp",result);
+						//console.log("reEmp",result);
 						io.sockets.emit("ResultadoEmpleadoProyecto",result);
 						
 					} else if(consulta=="11"){
 						var respuesta=""; 
+						var data2="";
+						var data3="";
+						var empleado="";
+						var nnombre="";
+						var fecha_inicio="";
+						var fecha_fin="";
+
 						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
 						result = await connection.execute(sql);
-						var a;
+						var limite = result.rows.length;
+						var c=0;
+						console.log("antes for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
+							console.log("dentro for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+							if(json[0]!=null && json[0]!=undefined && json[0]!=NaN){
+								empleado = empleado + json[0]+"#";
+								
+							} else {
+								fecha_inicio = fecha_inicio + " " +"#";
+							}
 
-							codempleado = json[0];
-							empleado = empleado + json[0]+"#";
-							nnombre = nnombre + json[3] + json[4]+"#";
-							fecha_inicio = fecha_inicio + json[21]+"#";
-							fecha_fin = fecha_fin + json[22]+"#";
+							if(json[3]!=null && json[3]!=undefined && json[3]!=NaN){
+								nnombre = nnombre + json[3] + " " + json[4]+"#";
+							} else {
+								nnombre = nnombre + json[3] + " " + json[4]+"#";
+							}
+							
+							if(json[21]!=null && json[21]!=undefined){
+								fecha_inicio = fecha_inicio + json[21]+"#";
+								
+							} else {
+								fecha_inicio = fecha_inicio + " " +"#";
+							}
 
-							var respuesta=""; 
-							var sql = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"'";
-							result = await connection.execute(sql);
+							if(json[22]!=null && json[22]!=undefined){
+								fecha_fin = fecha_fin + json[22]+"#";
+							} else {
+								fecha_fin = fecha_fin + " " +"#";
+								
+							}
+							
+
+							console.log("luego val",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+
+							//var respuesta=""; 
+							var sql2 = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' AND EMPLEADO = '"+json[0]+"'";
+							result2 = await connection.execute(sql2);
 							var b;
-							for(b=0; b<result.rows.length; b++){
-								var string2=JSON.stringify(result.rows[b]);
+							for(b=0; b<result2.rows.length; b++){
+								var string2=JSON.stringify(result2.rows[b]);
 								var json2 =  JSON.parse(string2);
 
-								data2 = data2 + json2[3]+"#";
-								data3 = data3 + json2[4]+"#";	
+								if(json2[3]!=null && json2[3]!=undefined){
+									data2 = data2 + json2[3]+"#";
+								} else {
+									data2 = data2 + " " +"#";	
+								}
+
+								if(json2[4]!=null && json2[4]!=undefined){
+									data3 = data3 + json2[4]+"#";
+								} else {
+									data3 = data3 + " " +"#";	
+								}
+								
 							}
 
 							data2 = data2+"%";
 							data3 = data3+"%";
 							c++;
-							if(c==json.length){
-								console.log("d2"+data2);
-								console.log("d3"+data3);
+							//console.log("c - tam json",c + " - " +limite);
+							if(c==limite){
+								//console.log("d2"+data2);
+								//console.log("d3"+data3);
 								io.sockets.emit("ResultadoIncidenciaProyecto",{
 									empleado: empleado,
 									nombre: nnombre,
@@ -495,8 +539,6 @@ io.sockets.on('connection', function(socket) {
 									incidencia_real: data3
 								});
 							}
-
-							
 						}
 						
 					}
@@ -564,8 +606,8 @@ io.sockets.on('connection', function(socket) {
 			                var json =  JSON.parse(string);
 							
                             for(i =0; i<json.length; i++){
-								codempleado = json[i].empleado;
-								empleado = empleado + json[i].empleado+"#";
+								codempleado = json[0].empleado;
+								empleado = empleado + json[0].empleado+"#";
 								console.log("empl "+empleado);
 								nnombre = nnombre + json[i].nombre_empleado + json[i].apellido_empleado+"#";
 								console.log("nnombre "+nnombre);
