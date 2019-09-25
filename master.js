@@ -249,33 +249,35 @@ io.sockets.on('connection', function(socket) {
 												
 					}  else if(consulta=="5"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO='"+data.empleado+"' " ;
+						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO='"+data.empleado+"' AND PROYECTO='"+data.proyecto+"'" ;
 						
-						console.log("SQL",sql);
+						console.log("SQL empleado",sql);
 						
 						result = await connection.execute(sql);
 						var a;
-						respuesta = '';
+						respuesta = "";
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
 							respuesta = json[0]+"";
 						}
-						console.log("respuesta",respuesta);
+						console.log("respuesta","#"+respuesta+"#");
 						if(respuesta==""){
 							//var result;
 							result = await connection.execute(
 								`INSERT INTO EMPLEADO (EMPLEADO,TIPO_DOCUMENTO,
 									NUMERO_DOCUMENTO,NOMBRE_EMPLEADO,APELLIDO_EMPLEADO,
 									CARGO_EMPLEADO,AREA_EMPLEADO,FECHA_INGRESO,FECHA_CESE,PROVISIONES_EMPLEADO,
-									SUELDO_BASICO,COSTO_TOTAL,ESTADO_EMPLEADO,CARGO_EMPLEADO_R,AREA_EMPLEADO_R) 
+									SUELDO_BASICO,COSTO_TOTAL,ESTADO_EMPLEADO,PROYECTO,AREA_EMPLEADO_DESC,
+									CARGO_EMPLEADO_DESC) 
 								VALUES (:EMPLEADO, :TIPO_DOCUMENTO,
 									:NUMERO_DOCUMENTO, :NOMBRE_EMPLEADO, :APELLIDO_EMPLEADO,
 									:CARGO_EMPLEADO, :AREA_EMPLEADO, :FECHA_INGRESO, :FECHA_CESE, :PROVISIONES_EMPLEADO,
-									:SUELDO_BASICO, :COSTO_TOTAL, :ESTADO_EMPLEADO, :CARGO_EMPLEADO_R, :AREA_EMPLEADO_R)`,
+									:SUELDO_BASICO, :COSTO_TOTAL, :ESTADO_EMPLEADO, :PROYECTO, :AREA_EMPLEADO_DESC,
+									:CARGO_EMPLEADO_DESC)`,
 								[data.empleado, data.tipoDocumento, data.numeroDocumento, data.nombre, data.apellido, 
 									data.cargo, data.area, data.fechaIngreso, data.fechaCese, data.provisiones, 
-									data.sueldo, data.costo, data.estado, data.cargo_r, data.area_r],{ autoCommit: true});
+									data.sueldo, data.costo, data.estado, data.proyecto, data.area_r, data.cargo_r],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
 							//var result3;		
 							result = await connection.execute(
@@ -283,6 +285,48 @@ io.sockets.on('connection', function(socket) {
 								VALUES (:EMPLEADO, :PROYECTO)`,
 								[data.empleado, data.proyecto],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
+
+
+							var sql2 = "SELECT * FROM AREA_EMPLEADO WHERE AREA_EMPLEADO='"+data.area+"' " ;
+							console.log("SQL2",sql2);
+							result = await connection.execute(sql2);
+							var a;
+							respuesta = "";
+							for(a=0; a<result.rows.length; a++){
+								var string=JSON.stringify(result.rows[a]);
+								var json =  JSON.parse(string);
+								respuesta = json[0]+"";
+							}
+							console.log("respuesta",respuesta);
+							if(respuesta==""){
+								//var result;
+								result = await connection.execute(
+									`INSERT INTO AREA_EMPLEADO (AREA_EMPLEADO,DESCRIPCION_AREA) 
+									VALUES (:AREA_EMPLEADO, :DESCRIPCION_AREA)`,
+									[data.area, data.area_r],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);
+							}
+
+
+							var sql3 = "SELECT * FROM CARGO_EMPLEADO WHERE CARGO_EMPLEADO='"+data.cargo+"' " ;
+							console.log("SQL3",sql3);
+							result = await connection.execute(sql3);
+							var a;
+							respuesta = "";
+							for(a=0; a<result.rows.length; a++){
+								var string=JSON.stringify(result.rows[a]);
+								var json =  JSON.parse(string);
+								respuesta = json[0]+"";
+							}
+							console.log("respuesta",respuesta);
+							if(respuesta==""){
+								//var result;
+								result = await connection.execute(
+									`INSERT INTO CARGO_EMPLEADO (CARGO_EMPLEADO,DESCRIPCION_CARGO) 
+									VALUES (:CARGO_EMPLEADO, :DESCRIPCION_CARGO)`,
+									[data.cargo, data.cargo_r],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);
+							}
 						}
 						
 						var sql = "SELECT * FROM PROYECTO_PERIODO WHERE PROYECTO = '"+data.proyecto+"' AND PERIODO = '"+data.periodo+"'";
@@ -368,6 +412,7 @@ io.sockets.on('connection', function(socket) {
 							respuesta = respuesta +json[7] + "#"+json[8] +"#%";
 						}
 						io.sockets.emit("ResultEmpleado",respuesta);
+
 					} else if(consulta=="8"){
 						var respuesta=""; 
 						var sql = "SELECT * FROM AREA_EMPLEADO ";
@@ -379,24 +424,82 @@ io.sockets.on('connection', function(socket) {
 							respuesta = respuesta + '<option value="'+json[0]+'">'+json[1] + "</option>";
 						}
 						io.sockets.emit("recibeArea",respuesta);
+
 					} else if(consulta=="9"){
 						var respuesta=""; 
 						result = await connection.execute(
 							`UPDATE EMPLEADO SET FECHA_INICIO = :FECHA_INICIO, FECHA_FIN = :FECHA_FIN, 
-							AREA_EMPLEADO = :AREA_EMPLEADO, AREA_EMPLEADO_R = :AREA_EMPLEADO_R 
+							AREA_EMPLEADO = :AREA_EMPLEADO, AREA_EMPLEADO_DESC = :AREA_EMPLEADO_DESC 
 							WHERE EMPLEADO = :EMPLEADO`,
 							[data.fechaInicio,data.fechaFin,data.area,data.nombreArea,data.empleado],
-							{ autoCommit: true });  // commit once for all DML in the script
-						console.log("Rows updated: " + result.rowsAffected); // 2
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected); 
 					  
 						result = await connection.execute(
-							`UPDATE EMPLEADO_PROYECTO SET FECHA_INICIO = :FECHA_INICIO, FECHA_FIN = :FECHA_FIN, 
+							`UPDATE EMPLEADO_PROYECTO SET FECHA_INICIO = :FECHA_INICIO, FECHA_FIN = :FECHA_FIN 
 							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO`,
 							[data.fechaInicio,data.fechaFin,data.empleado,data.proyecto],
-							{ autoCommit: true });  // commit once for all DML in the script
-						console.log("Rows updated: " + result.rowsAffected); // 2
+							{ autoCommit: true });
+						console.log("Rows updated 2: " + result.rowsAffected);
+					} else if(consulta=="10"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+						}
+						console.log("reEmp",result);
+						io.sockets.emit("ResultadoEmpleadoProyecto",result);
+						
+					} else if(consulta=="11"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+
+							codempleado = json[0];
+							empleado = empleado + json[0]+"#";
+							nnombre = nnombre + json[3] + json[4]+"#";
+							fecha_inicio = fecha_inicio + json[21]+"#";
+							fecha_fin = fecha_fin + json[22]+"#";
+
+							var respuesta=""; 
+							var sql = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"'";
+							result = await connection.execute(sql);
+							var b;
+							for(b=0; b<result.rows.length; b++){
+								var string2=JSON.stringify(result.rows[b]);
+								var json2 =  JSON.parse(string2);
+
+								data2 = data2 + json2[3]+"#";
+								data3 = data3 + json2[4]+"#";	
+							}
+
+							data2 = data2+"%";
+							data3 = data3+"%";
+							c++;
+							if(c==json.length){
+								console.log("d2"+data2);
+								console.log("d3"+data3);
+								io.sockets.emit("ResultadoIncidenciaProyecto",{
+									empleado: empleado,
+									nombre: nnombre,
+									fechaInicio: fecha_inicio,
+									fechaFin: fecha_fin,
+									incidencia_prevista: data2,
+									incidencia_real: data3
+								});
+							}
+
+							
+						}
+						
 					}
-					
 					
 				} catch(err){
 					console.error(err.message);
@@ -445,39 +548,7 @@ io.sockets.on('connection', function(socket) {
 					
     			}  else if(consulta=="9"){
 					
-					var consultaQ = "UPDATE empleado SET fecha_inicio='"+data.fechaInicio+"',";
-					consultaQ = consultaQ + " fecha_fin='"+data.fechaFin+"',",
-					consultaQ = consultaQ + " area_empleado='"+data.area+"',";
-					consultaQ = consultaQ + " area_empleado_r='"+data.nombreArea+"' WHERE empleado='"+data.empleado+"' ";
-					consultaQ = consultaQ + "AND proyecto='"+data.proyecto+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "UPDATE empleado_proyecto SET fecha_inicio='"+data.fechaInicio+"',";
-					consultaQ = consultaQ + " fecha_fin='"+data.fechaFin+"'",
-					consultaQ = consultaQ + " WHERE empleado='"+data.empleado+"' ";
-					consultaQ = consultaQ + "AND proyecto='"+data.proyecto+"'";
-						  
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho2");
-						});
-					
     			}  else if(consulta=="10"){
-					
-					var consultaQ = "SELECT * FROM empleado WHERE proyecto='"+data.proyecto+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							io.sockets.emit("ResultadoEmpleadoProyecto",json);
-							
-						  });
 					
     			}  else if(consulta=="11"){
 					var empleado="",nnombre="",fecha_inicio="",fecha_fin="";
@@ -1110,11 +1181,11 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('BuscaEmpleado', function(data) {
-		BD("7",data);
+		BD2("7",data);
 	});
 
 	socket.on('BuscaArea', function(data) {
-		BD("8",data);
+		BD2("8",data);
 	});
 
 	socket.on('ParametrosInicio', function(data) {
@@ -1123,15 +1194,15 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('ActualizaEmpleado', function(data) {
-		BD("9",data);
+		BD2("9",data);
 	});
 
 	socket.on('EmpleadoProyecto', function(data) {
-		BD("10",data);
+		BD2("10",data);
 	});
 
 	socket.on('IncidenciaProyecto', function(data) {
-		BD("11",data);
+		BD2("11",data);
 	});
 
 	socket.on('GuardarIncidencia', function(data) {

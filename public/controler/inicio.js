@@ -251,21 +251,24 @@ function init(){
 		});
 
 		socket.on("ResultadoEmpleadoProyecto",function(data){
-			ext = data.length;
+			ext = data.rows.length;
+			
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>MATRICULA</td><td>APELLIDOS Y NOMBRES</td><td>UNIDAD FUNCIONAL</td>';
 			tabla = tabla + '<td>F. INGRESO</td><td>F. CESE</td><td>AREA</td><td>AREA COSTOS</td>';
 			tabla = tabla + '<td>FUNCION</td><td>FUNCION COSTOS</td><td>F. INICIO</td><td>F. FIN</td></tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
-				listaEmpleado = listaEmpleado + data[i].empleado + "#";
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+				listaEmpleado = listaEmpleado + json[0] + "#";
 				
 				var pickeri = '<div class="form-group">';
 				pickeri = pickeri + '<div class="input-group">';
 				pickeri = pickeri + '<span class="input-group-prepend">';
 				pickeri = pickeri + '<span class="input-group-text"><i class="icon-calendar22"></i></span>';
 				pickeri = pickeri + '</span>';
-				pickeri = pickeri + '<input name="datepicker" type="date" id="datepickeri'+i+'" style="width:150px;" value="'+data[i].fecha_inicio+'" />';
+				pickeri = pickeri + '<input name="datepicker" type="date" id="datepickeri'+i+'" style="width:150px;" value="'+json[21]+'" />';
 				pickeri = pickeri + '</div>';
 				pickeri = pickeri + '</div>';
 
@@ -274,30 +277,30 @@ function init(){
 				pickerf = pickerf + '<span class="input-group-prepend">';
 				pickerf = pickerf + '<span class="input-group-text"><i class="icon-calendar22"></i></span>';
 				pickerf = pickerf + '</span>';
-				pickerf = pickerf + '<input name="datepicker" type="date" id="datepickerf'+i+'" style="width:150px;" value="'+data[i].fecha_fin+'" />';
+				pickerf = pickerf + '<input name="datepicker" type="date" id="datepickerf'+i+'" style="width:150px;" value="'+json[22]+'" />';
 				pickerf = pickerf + '</div>';
 				pickerf = pickerf + '</div>';
 
 				//console.log("data"+i+": "+data[i]["AreaCodigo"]);
-				tabla = tabla+'<tr><td>'+data[i].empleado+'</td>';
-				tabla = tabla+'<td>'+data[i].apellido_empleado+' '+data[i].nombre_empleado+'</td>';
+				tabla = tabla+'<tr><td>'+json[0]+'</td>';
+				tabla = tabla+'<td>'+json[4]+' '+json[3]+'</td>';
 				//tabla = tabla+'<td>'+data[i]["EmpleadoNombre"]+'</td>';
-				tabla = tabla+'<td>'+data[i].proyecto+'</td>';
-				tabla = tabla+'<td>'+data[i].fecha_ingreso+'</td>';
-				tabla = tabla+'<td>'+data[i].fecha_cese+'</td>';
+				tabla = tabla+'<td>'+json[20]+'</td>';
+				tabla = tabla+'<td>'+json[7]+'</td>';
+				tabla = tabla+'<td>'+json[8]+'</td>';
 
 				var larea = '<select id="AreaSelectVal_'+i+'">';
-				larea = larea + '<option value="'+data[i].area_costos+'">'+data[i].area_costos_r+'</option>';
+				larea = larea + '<option value="'+json[6]+'">'+json[24]+'</option>';
 				larea = larea + $areaSelect+'</select>';
 
-				tabla = tabla + '<td>'+data[i].area_empleado_r+'</td>';
+				tabla = tabla + '<td>'+json[24]+'</td>';
 				tabla = tabla + '<td>'+larea+'</td>';
 				//tabla = tabla+'<td>'+data[i]["AreaNombre"]+'</td>';
 				var lfuncion = '<select id="FuncionSelectVal_'+i+'">';
-				lfuncion = lfuncion + '<option value="'+data[i].funcion_costos+'">'+data[i].funcion_costos_r+'</option>';
+				lfuncion = lfuncion + '<option value="'+json[5]+'">'+json[23]+'</option>';
 				lfuncion = lfuncion + $funcionSelect+'</select>';
 				
-				tabla = tabla+'<td>'+data[i].cargo_empleado_r+'</td>';
+				tabla = tabla+'<td>'+json[23]+'</td>';
 				tabla = tabla+'<td>'+lfuncion+'</td>';
 				tabla = tabla+'<td>'+pickeri+'</td>';
 				tabla = tabla+'<td>'+pickerf+'</td></tr>';
