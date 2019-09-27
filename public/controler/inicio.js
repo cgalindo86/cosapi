@@ -85,6 +85,7 @@ function init(){
 				tabla = tabla+'</tr>';
 			}
 			tabla = tabla+'</tbody></table>';
+			console.log("area 2"+tabla);
 			document.getElementById("cuerpoArea").innerHTML = tabla;
 		});
 

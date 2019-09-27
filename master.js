@@ -561,10 +561,11 @@ io.sockets.on('connection', function(socket) {
 						
 					} else if(consulta=="14"){
 						var respuesta=""; 
+						
 						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
 						result = await connection.execute(sql);
 						var a;
-						
+						console.log("reEmp",result);
 						//console.log("reEmp",result);
 						io.sockets.emit("recibeArea2",result);
 						
@@ -728,7 +729,7 @@ io.sockets.on('connection', function(socket) {
 						var sql = "SELECT * FROM ROL WHERE ROL = '"+data.codigo+"' AND ESTADO = '1'";
 						result = await connection.execute(sql);
 						var a;
-						var reg=0;
+						var reg=1;
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
