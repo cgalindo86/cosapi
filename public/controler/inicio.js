@@ -58,25 +58,28 @@ function init(){
 		socket.on("recibeArea2",function(data){
 			console.log("area 2"+data);
 			var estado='';
-
-			ext = data.length;
+			ext = data.rows.length;
+			//ext = data.length;
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
-				listaArea = listaArea + data[i].area_empleado + "#";
-				listaNomArea = listaNomArea + data[i].descripcion_area + "#";
-				if(data[i].estado=="1"){
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+				
+				listaArea = listaArea + json[0] + "#";
+				listaNomArea = listaNomArea + json[1] + "#";
+				if(json[6]=="1"){
 					estado="ACTIVO";
-				} else if(data[i].estado=="0"){
+				} else if(json[6]=="0"){
 					estado="INACTIVO";
 				}
 
 				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditArea('+i+')" >';
 				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeleteArea('+i+')">';
 				
-				tabla = tabla+'<tr><td>'+data[i].descripcion_area+'</td>';
+				tabla = tabla+'<tr><td>'+json[1]+'</td>';
 				tabla = tabla+'<td>'+estado+'</td>';
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
@@ -90,12 +93,14 @@ function init(){
 			console.log("area 3"+data);
 			var estado='';
 
-			ext = data.length;
+			ext = data.rows.length;
+
 			var tabla = '<select id="selectAreaEliminada"><option value="0">Seleccionar</option>';
 			
 			for(i=0; i<ext; i++){
-				
-				tabla = tabla + '<option value="'+data[i].area_empleado+'">'+data[i].descripcion_area+'</option>';
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+				tabla = tabla + '<option value="'+json[0]+'">'+json[1]+'</option>';
 				
 			}
 			tabla = tabla + '</select>';
@@ -110,22 +115,24 @@ function init(){
 
 		socket.on("recibeFuncion2",function(data){
 			console.log("funcion 2"+data);
-			var estado='';
+			ext = data.rows.length;
 
-			ext = data.length;
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
-				listaFuncion = listaFuncion + data[i].funcion_empleado + "#";
-				listaNomFuncion = listaNomFuncion + data[i].descripcion_funcion + "#";
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+
+				listaFuncion = listaFuncion + json[0] + "#";
+				listaNomFuncion = listaNomFuncion + json[1] + "#";
 				
 
 				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditFuncion('+i+')" >';
 				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeleteFuncion('+i+')">';
 				
-				tabla = tabla+'<tr><td>'+data[i].descripcion_funcion+'</td>';
+				tabla = tabla+'<tr><td>'+json[1]+'</td>';
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
@@ -137,12 +144,13 @@ function init(){
 			console.log("funcion 3"+data);
 			var estado='';
 
-			ext = data.length;
+			ext = data.rows.length;
 			var tabla = '<select id="selectFuncionEliminada"><option value="0">Seleccionar</option>';
 			
 			for(i=0; i<ext; i++){
-				
-				tabla = tabla + '<option value="'+data[i].funcion_empleado+'">'+data[i].descripcion_funcion+'</option>';
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+				tabla = tabla + '<option value="'+json[0]+'">'+json[1]+'</option>';
 				
 			}
 			tabla = tabla + '</select>';
@@ -154,24 +162,27 @@ function init(){
 			console.log("perfil 2"+data);
 			var estado='';
 
-			ext = data.length;
+			ext = data.rows.length;
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
-				listaPerfil = listaPerfil + data[i].rol + "#";
-				listaNomPerfil = listaNomPerfil + data[i].descripcion + "#";
-				if(data[i].estado=="1"){
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+
+				listaPerfil = listaPerfil + json[0] + "#";
+				listaNomPerfil = listaNomPerfil + json[1] + "#";
+				if(json[3]=="1"){
 					estado="ACTIVO";
-				} else if(data[i].estado=="0"){
+				} else if(json[3]=="0"){
 					estado="INACTIVO";
 				}
 
 				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditPerfil('+i+')" >';
 				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeletePerfil('+i+')">';
 				
-				tabla = tabla+'<tr><td>'+data[i].descripcion+'</td>';
+				tabla = tabla+'<tr><td>'+json[1]+'</td>';
 				tabla = tabla+'<td>'+estado+'</td>';
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
@@ -184,24 +195,27 @@ function init(){
 			console.log("opciones "+data);
 			var estado='';
 
-			ext = data.length;
+			ext = data.rows.length;
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
-				listaOpciones = listaOpciones + data[i].accion + "#";
-				listaNomOpciones = listaNomOpciones + data[i].descripcion_accion + "#";
-				if(data[i].estado=="1"){
+				var string=JSON.stringify(data.rows[i]);
+				var json =  JSON.parse(string);
+
+				listaOpciones = listaOpciones + json[0] + "#";
+				listaNomOpciones = listaNomOpciones + json[1] + "#";
+				if(json[3]=="1"){
 					estado="ACTIVO";
-				} else if(data[i].estado=="0"){
+				} else if(json[3]=="0"){
 					estado="INACTIVO";
 				}
 
 				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditOpciones('+i+')" >';
 				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeleteOpciones('+i+')">';
 				
-				tabla = tabla+'<tr><td>'+data[i].descripcion_accion+'</td>';
+				tabla = tabla+'<tr><td>'+json[1]+'</td>';
 				tabla = tabla+'<td>'+estado+'</td>';
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';

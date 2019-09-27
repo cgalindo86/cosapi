@@ -541,7 +541,396 @@ io.sockets.on('connection', function(socket) {
 							}
 						}
 						
+					} else if(consulta=="12"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE INCIDENCIA SET INCIDENCIA_PREVISTA = :INCIDENCIA_PREVISTA
+							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO AND PERIODO = :PERIODO`,
+							[data.incidencia,data.empleado,data.proyecto,data.periodo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected); 
+						
+					} else if(consulta=="13"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE INCIDENCIA SET INCIDENCIA_REAL = :INCIDENCIA_PREVISTA
+							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO AND PERIODO = :PERIODO`,
+							[data.incidencia,data.empleado,data.proyecto,data.periodo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected); 
+						
+					} else if(consulta=="14"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeArea2",result);
+						
+					} else if(consulta=="15"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE AREA_EMPLEADO = '"+data.codigo+"' AND ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO AREA_EMPLEADO (AREA_EMPLEADO,DESCRIPCION_AREA,ESTADO) 
+								VALUES (:AREA_EMPLEADO, :DESCRIPCION_AREA, :ESTADO)`,
+								[data.codigo, data.descripcion, data.estado],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							
+						} 
+						
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeArea2",result);
+						
+					} else if(consulta=="16"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE AREA_EMPLEADO SET DESCRIPCION_AREA = :DESCRIPCION_AREA, ESTADO = :ESTADO
+							WHERE AREA_EMPLEADO = :AREA_EMPLEADO`,
+							[data.descripcion,data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeArea2",result);
+						
+					} else if(consulta=="17"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						io.sockets.emit("recibeFuncion2",result);
+						
+					} else if(consulta=="18"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE CARGO_EMPLEADO = '"+data.codigo+"' AND ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO CARGO_EMPLEADO (CARGO_EMPLEADO,DESCRIPCION_CARGO,ESTADO) 
+								VALUES (:CARGO_EMPLEADO, :DESCRIPCION_CARGO, :ESTADO)`,
+								[data.codigo, data.descripcion, data.estado],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							
+						} 
+						
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeFuncion2",result);
+						
+					} else if(consulta=="19"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE CARGO_EMPLEADO SET DESCRIPCION_CARGO = :DESCRIPCION_CARGO, ESTADO = :ESTADO
+							WHERE CARGO_EMPLEADO = :CARGO_EMPLEADO`,
+							[data.descripcion,data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeFuncion2",result);
+						
+					} else if(consulta=="20"){
+						var respuesta=""; 
+						
+						var sql = "SELECT * FROM CARGO_EMPLEADO ";
+						result = await connection.execute(sql);
+						var limite = result.rows.length;
+						var c=0;
+
+						respuesta='<option value="0">Seleccionar</option>';
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = respuesta + '<option value="'+json[0]+'">'+json[1] + "</option>";
+						}
+						io.sockets.emit("recibeFuncion",respuesta);
+
+					} else if(consulta=="21"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE CARGO_EMPLEADO SET ESTADO = :ESTADO
+							WHERE CARGO_EMPLEADO = :CARGO_EMPLEADO`,
+							[data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeFuncion2",result);
+						
+					} else if(consulta=="22"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE AREA_EMPLEADO SET ESTADO = :ESTADO
+							WHERE AREA_EMPLEADO = :AREA_EMPLEADO`,
+							[data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeArea2",result);
+						
+					} else if(consulta=="23"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM ROL WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						
+						io.sockets.emit("recibePerfil2",result);
+						
+					} else if(consulta=="24"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM ROL WHERE ROL = '"+data.codigo+"' AND ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						var reg=0;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+							reg++;
+						}
+
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO ROL (ROL,DESCRIPCION_ROL,ESTADO) 
+								VALUES (:ROL,:DESCRIPCION_CARGO, :ESTADO)`,
+								[reg,data.descripcion, data.estado],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							
+						} 
+						
+						var sql = "SELECT * FROM ROL WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibePerfil2",result);
+						
+					} else if(consulta=="25"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE ROL SET DESCRIPCION_ROL = : DESCRIPCION_ROL, ESTADO = :ESTADO
+							WHERE ROL = :ROL`,
+							[data.descripcion,data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM ROL WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibePerfil2",result);
+						
+					} else if(consulta=="26"){
+						
+						var sql = "SELECT * FROM ACCION ";
+						result = await connection.execute(sql);
+						var a;
+						var reg=0;
+						var respuesta='<select id="AccionSelectVal"><option value="0">Seleccionar</option>';
+                            
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = respuesta + '<option value="'+json[0]+'">'+json[1] + "</option>";
+								
+							reg++;
+						}
+
+						io.sockets.emit("recibeAccion",respuesta);
+						
+					} else if(consulta=="27"){
+						
+						var sql = "SELECT * FROM ACCION WHERE ESTADO ='1' ";
+						result = await connection.execute(sql);
+						var a;
+						
+						io.sockets.emit("recibeOpciones",result);
+						
+					} else if(consulta=="28"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM ACCION WHERE ACCION = '"+data.codigo+"' AND ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						var reg=0;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+							reg++;
+						}
+
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO ACCION (ACCION,DESCRIPCION_ACCION,ESTADO) 
+								VALUES (:ACCION,:DESCRIPCION_ACCION, :ESTADO)`,
+								[reg,data.descripcion, data.estado],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							
+						} 
+						
+						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeOpciones",result);
+						
+					} else if(consulta=="29"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE ACCION SET DESCRIPCION_ACCION = : DESCRIPCION_ACCION, ESTADO = :ESTADO
+							WHERE ACCION = :ACCION`,
+							[data.descripcion,data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeOpciones",result);
+						
+					} else if(consulta=="30"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE ROL SET ESTADO = :ESTADO
+							WHERE ROL = :ROL`,
+							[data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM ROL WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibePerfil2",result);
+						
+					} else if(consulta=="31"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE ACCION SET ESTADO = :ESTADO
+							WHERE ACCION = :ACCION`,
+							[data.estado,data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeOpciones",result);
+						
+					} else if(consulta=="32"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '0'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeArea3",result);
+						
+					} else if(consulta=="33"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE AREA_EMPLEADO SET ESTADO = :ESTADO
+							WHERE AREA_EMPLEADO = :AREA_EMPLEADO`,
+							["1",data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						io.sockets.emit("recibeArea2",result);
+						
+					} else if(consulta=="34"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '0'";
+						result = await connection.execute(sql);
+						var a;
+						
+						//console.log("reEmp",result);
+						io.sockets.emit("recibeFuncion3",result);
+						
+					} else if(consulta=="35"){
+						var respuesta=""; 
+						result = await connection.execute(
+							`UPDATE CARGO_EMPLEADO SET ESTADO = :ESTADO
+							WHERE CARGO_EMPLEADO = :CARGO_EMPLEADO`,
+							["1",data.codigo],
+							{ autoCommit: true });  
+						console.log("Rows updated: " + result.rowsAffected);
+
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE ESTADO = '1'";
+						result = await connection.execute(sql);
+						var a;
+						
+						io.sockets.emit("recibeFuncion2",result);
+						
 					}
+					/*
+					
+					*/
 					
 				} catch(err){
 					console.error(err.message);
@@ -570,598 +959,6 @@ io.sockets.on('connection', function(socket) {
 	            });
 
     		con.connect(function(err) {
-    			if(consulta=="0"){
-
-    			} else if(consulta=="1"){
-                    					
-				}  else if(consulta=="2"){
-					
-    			} else if(consulta=="3"){
-					
-    			} else if(consulta=="4"){
-					//var usuario = data.usuario;
-    			}  else if(consulta=="5"){
-					//var usuario = data.usuario;
-    			}  else if(consulta=="6"){
-					//var usuario = data.usuario;
-    			}  else if(consulta=="7"){
-					//var usuario = data.usuario;
-    			}  else if(consulta=="8"){
-					
-    			}  else if(consulta=="9"){
-					
-    			}  else if(consulta=="10"){
-					
-    			}  else if(consulta=="11"){
-					var empleado="",nnombre="",fecha_inicio="",fecha_fin="";
-					var data2="",data3="";
-
-					var codempleado="";
-					var consultaQ = "SELECT * FROM empleado WHERE proyecto='"+data.proyecto+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							
-                            for(i =0; i<json.length; i++){
-								codempleado = json[0].empleado;
-								empleado = empleado + json[0].empleado+"#";
-								console.log("empl "+empleado);
-								nnombre = nnombre + json[i].nombre_empleado + json[i].apellido_empleado+"#";
-								console.log("nnombre "+nnombre);
-								fecha_inicio = fecha_inicio + json[i].fecha_inicio+"#";
-								console.log("fi "+fecha_inicio);
-								fecha_fin = fecha_fin + json[i].fecha_fin+"#";
-								console.log("ff "+fecha_fin);
-
-								console.log("busq "+data.proyecto+" "+codempleado);
-								var c=0;
-								var consultaQ2 = "SELECT * FROM incidencia WHERE proyecto='"+data.proyecto+"'  AND empleado='"+codempleado+"' ORDER BY periodo";
-								con.query(consultaQ2, function (err, result2, fields) {
-									if (err) throw err;
-									
-									var string2=JSON.stringify(result2);
-									var json2 = JSON.parse(string2);
-									//console.log(json2);
-									var a;
-									for(a=0; a<json2.length; a++){
-										data2 = data2 + json2[a].incidencia_prevista+"#";
-										data3 = data3 + json2[a].incidencia_real+"#";	
-										
-									}
-									data2 = data2+"%";
-									data3 = data3+"%";
-									c++;
-									if(c==json.length){
-										console.log("d2"+data2);
-										console.log("d3"+data3);
-										io.sockets.emit("ResultadoIncidenciaProyecto",{
-											empleado: empleado,
-											nombre: nnombre,
-											fechaInicio: fecha_inicio,
-											fechaFin: fecha_fin,
-											incidencia_prevista: data2,
-											incidencia_real: data3
-										});
-									}
-									
-								});
-								
-							}
-							
-						  });
-    			}  else if(consulta=="12"){
-					
-					var consultaQ = "UPDATE incidencia SET incidencia_prevista='"+data.incidencia+"' ";
-					consultaQ = consultaQ + " WHERE empleado='"+data.empleado+"' ";
-					consultaQ = consultaQ + "AND proyecto='"+data.proyecto+"' AND periodo='"+data.periodo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-    			}  else if(consulta=="13"){
-					
-					var consultaQ = "UPDATE incidencia SET incidencia_real='"+data.incidencia+"' ";
-					consultaQ = consultaQ + " WHERE empleado='"+data.empleado+"' ";
-					consultaQ = consultaQ + "AND proyecto='"+data.proyecto+"' AND periodo='"+data.periodo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					//BD("11",data);
-    			}  else if(consulta=="14"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							io.sockets.emit("recibeArea2",json);
-							
-						  });
-					
-    			}  else if(consulta=="15"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM area_empleado WHERE area_empleado='"+data.codigo+"' AND  estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			        	var json =  JSON.parse(string);
-						
-						var respuesta='';
-						for(i =0; i<json.length; i++){
-							respuesta = json[i].area_empleado;
-						}
-						console.log("resp area "+respuesta);
-						if(respuesta==""){
-							var sql = "INSERT INTO area_empleado (area_empleado,descripcion_area,estado) ";
-							sql = sql + "VALUES ('"+data.codigo+"','"+data.descripcion+"','"+data.estado+"') ";
-							
-							con.query(sql, function (err, result) {
-								if (err) throw err;
-								console.log("1 record inserted");
-							});	
-						}
-						//io.sockets.emit("ActualizaTabla","1");	
-					});
-					
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibeArea2",json);
-							
-					});
-					
-    			} else if(consulta=="16"){
-					
-					var consultaQ = "UPDATE area_empleado SET descripcion_area='"+data.descripcion+"', estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE area_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeArea2",json);
-								  
-					});
-					
-						  
-    			}  else if(consulta=="17"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM funcion_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibeFuncion2",json);
-							
-					});
-					//io.sockets.emit("ActualizaTabla","2");
-    			}  else if(consulta=="18"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM funcion_empleado WHERE funcion_empleado='"+data.codigo+"' AND  estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			        	var json =  JSON.parse(string);
-						
-						var respuesta='';
-						for(i =0; i<json.length; i++){
-							respuesta = json[i].funcion_empleado;
-						}
-						console.log("resp funcion "+respuesta);
-						
-						if(respuesta==""){
-							var sql = "INSERT INTO funcion_empleado (funcion_empleado,descripcion_funcion,estado) ";
-							sql = sql + "VALUES ('"+data.codigo+"','"+data.descripcion+"','"+data.estado+"') ";
-							
-							con.query(sql, function (err, result) {
-								if (err) throw err;
-								console.log("1 record inserted");
-							});	
-						}
-							
-					});
-					var consultaQ = "SELECT * FROM funcion_empleado WHERE estado='1' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibeFuncion2",json);
-							
-					});
-					
-    			} else if(consulta=="19"){
-					
-					var consultaQ = "UPDATE funcion_empleado SET descripcion_funcion='"+data.descripcion+"', estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE funcion_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM funcion_empleado WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeFuncion2",json);
-								  
-					});
-
-    			}  else if(consulta=="20"){
-					
-					var consultaQ = "SELECT * FROM funcion_empleado ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta='<option value="0">Seleccionar</option>';
-                            for(i =0; i<json.length; i++){
-								respuesta = respuesta + '<option value="'+json[i].funcion_empleado+'">'+json[i].descripcion_funcion + "</option>";
-								
-							}
-							console.log("respuestaFuncion: "+respuesta);
-							io.sockets.emit("recibeFuncion",respuesta);
-							
-						  });
-					
-    			} else if(consulta=="21"){
-					
-					var consultaQ = "UPDATE funcion_empleado SET estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE funcion_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM funcion_empleado WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeFuncion2",json);
-								  
-					});
-
-    			} else if(consulta=="22"){
-					
-					var consultaQ = "UPDATE area_empleado SET estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE area_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeArea2",json);
-								  
-					});
-					
-						  
-    			}  else if(consulta=="23"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM rol  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibePerfil2",json);
-							
-					});
-					//io.sockets.emit("ActualizaTabla","2");
-    			}  else if(consulta=="24"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM rol WHERE rol='"+data.codigo+"' AND  estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			        	var json =  JSON.parse(string);
-						
-						var respuesta='';
-						for(i =0; i<json.length; i++){
-							respuesta = json[i].area_empleado;
-						}
-						console.log("resp rol "+respuesta);
-						if(respuesta==""){
-							var sql = "INSERT INTO rol (descripcion,estado) ";
-							sql = sql + "VALUES ('"+data.descripcion+"','"+data.estado+"') ";
-							
-							con.query(sql, function (err, result) {
-								if (err) throw err;
-								console.log("1 record inserted");
-							});	
-						}
-						//io.sockets.emit("ActualizaTabla","1");	
-					});
-					
-					var consultaQ = "SELECT * FROM rol  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibePerfil2",json);
-							
-					});
-					
-    			} else if(consulta=="25"){
-					
-					var consultaQ = "UPDATE rol SET descripcion='"+data.descripcion+"', estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE rol='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM rol WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibePerfil2",json);
-								  
-					});
-
-    			}  else if(consulta=="26"){
-					
-					var consultaQ = "SELECT * FROM accion ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							var mnombre, mid, i;
-							var respuesta='<select id="AccionSelectVal"><option value="0">Seleccionar</option>';
-                            for(i =0; i<json.length; i++){
-								respuesta = respuesta + '<option value="'+json[i].accion+'">'+json[i].descripcion_accion + "</option>";
-								
-							}
-							respuesta = respuesta + '</select>';
-							console.log("respuestaAccion: "+respuesta);
-							io.sockets.emit("recibeAccion",respuesta);
-							
-						  });
-					
-    			}  else if(consulta=="27"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM accion WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibeOpciones",json);
-							
-					});
-					//io.sockets.emit("ActualizaTabla","2");
-    			}  else if(consulta=="28"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM accion WHERE accion='"+data.codigo+"' AND  estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			        	var json =  JSON.parse(string);
-						
-						var respuesta='';
-						for(i =0; i<json.length; i++){
-							respuesta = json[i].area_empleado;
-						}
-						console.log("resp rol "+respuesta);
-						if(respuesta==""){
-							var sql = "INSERT INTO accion (descripcion_accion,estado) ";
-							sql = sql + "VALUES ('"+data.descripcion+"','"+data.estado+"') ";
-							
-							con.query(sql, function (err, result) {
-								if (err) throw err;
-								console.log("1 record inserted");
-							});	
-						}
-						//io.sockets.emit("ActualizaTabla","1");	
-					});
-					
-					var consultaQ = "SELECT * FROM accion  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-							
-			            var string=JSON.stringify(result);
-			            var json =  JSON.parse(string);
-						io.sockets.emit("recibeOpciones",json);
-							
-					});
-					
-    			} else if(consulta=="29"){
-					
-					var consultaQ = "UPDATE accion SET descripcion_accion='"+data.descripcion+"', estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE accion='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM accion WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeOpciones",json);
-								  
-					});
-
-    			} else if(consulta=="30"){
-					
-					var consultaQ = "UPDATE rol SET estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE rol='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM rol  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibePerfil2",json);
-								  
-					});
-					
-						  
-    			} else if(consulta=="31"){
-					
-					var consultaQ = "UPDATE accion SET estado='"+data.estado+"' ";
-					consultaQ = consultaQ + " WHERE accion='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM accion  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeOpciones",json);
-								  
-					});
-					
-						  
-    			}  else if(consulta=="32"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='0'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							io.sockets.emit("recibeArea3",json);
-							
-						  });
-					
-    			} else if(consulta=="33"){
-					
-					var consultaQ = "UPDATE area_empleado SET estado='1' ";
-					consultaQ = consultaQ + " WHERE area_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM area_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeArea2",json);
-								  
-					});
-					
-						  
-    			}  else if(consulta=="34"){
-					//console.log("consulta area");
-					var consultaQ = "SELECT * FROM funcion_empleado  WHERE estado='0'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							
-			                var string=JSON.stringify(result);
-			                var json =  JSON.parse(string);
-							io.sockets.emit("recibeFuncion3",json);
-							
-						  });
-					
-    			} else if(consulta=="35"){
-					
-					var consultaQ = "UPDATE funcion_empleado SET estado='1' ";
-					consultaQ = consultaQ + " WHERE funcion_empleado='"+data.codigo+"' ";
-					
-					con.query(consultaQ, function (err, result, fields) {
-							if (err) throw err;
-							console.log("hecho");
-						  });
-					
-					var consultaQ = "SELECT * FROM funcion_empleado  WHERE estado='1'";
-					
-					con.query(consultaQ, function (err, result, fields) {
-						if (err) throw err;
-								  
-						var string=JSON.stringify(result);
-						var json =  JSON.parse(string);
-						io.sockets.emit("recibeFuncion2",json);
-								  
-					});
-					
-						  
-    			}
 				
     		});
 	    	//con.end();
@@ -1248,100 +1045,100 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('GuardarIncidencia', function(data) {
-		BD("12",data);
+		BD2("12",data);
 	});
 
 	socket.on('CierrePeriodo', function(data) {
-		BD("13",data);
+		BD2("13",data);
 	});
 
 	socket.on('ConsultaArea', function(data) {
-		BD("14",data);
+		BD2("14",data);
 	});
 
 	socket.on('GuardaArea', function(data) {
-		BD("15",data);
+		BD2("15",data);
 	});
 
 	socket.on('EditaArea', function(data) {
-		BD("16",data);
+		BD2("16",data);
 	});
 
 	socket.on('ConsultaFuncion', function(data) {
-		BD("17",data);
+		BD2("17",data);
 	});
 
 	socket.on('GuardaFuncion', function(data) {
 		console.log(data);
-		BD("18",data);
+		BD2("18",data);
 	});
 
 	socket.on('EditaFuncion', function(data) {
-		BD("19",data);
+		BD2("19",data);
 	});
 
 	socket.on('BuscaFuncion', function(data) {
-		BD("20",data);
+		BD2("20",data);
 	});
 
 	socket.on('EliminaFuncion', function(data) {
-		BD("21",data);
+		BD2("21",data);
 	});
 	
 	socket.on('EliminaArea', function(data) {
-		BD("22",data);
+		BD2("22",data);
 	});
 
 	socket.on('ConsultaPerfil', function(data) {
-		BD("23",data);
+		BD2("23",data);
 	});
 
 	socket.on('GuardaPerfil', function(data) {
-		BD("24",data);
+		BD2("24",data);
 	});
 	
 	socket.on('EditaPerfil', function(data) {
-		BD("25",data);
+		BD2("25",data);
 	});//BuscaAcciones
 
 	socket.on('BuscaAcciones', function(data) {
-		BD("26",data);
+		BD2("26",data);
 	});//
 
 	socket.on('ConsultaOpciones', function(data) {
-		BD("27",data);
+		BD2("27",data);
 	});
 
 	socket.on('GuardaOpciones', function(data) {
-		BD("28",data);
+		BD2("28",data);
 	});
 	
 	socket.on('EditaOpciones', function(data) {
-		BD("29",data);
+		BD2("29",data);
 	});//BuscaAcciones
 
 	socket.on('EliminaPerfil', function(data) {
-		BD("30",data);
+		BD2("30",data);
 	});
 
 	socket.on('EliminaOpciones', function(data) {
-		BD("31",data);
+		BD2("31",data);
 	});
 
 	socket.on('ConsultaArea2', function(data) {
-		BD("32",data);
+		BD2("32",data);
 	});
 
 	socket.on('GuardaArea2', function(data) {
-		BD("33",data);
+		BD2("33",data);
 	});
 
 	socket.on('ConsultaFuncion2', function(data) {
-		BD("34",data);
+		BD2("34",data);
 	});
 
 	socket.on('GuardaFuncion2', function(data) {
-		BD("35",data);
+		BD2("35",data);
 	});
 
 	
