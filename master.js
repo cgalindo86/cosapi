@@ -15,7 +15,7 @@ var puerto = 8001;
 server.listen(puerto);
 
 function Valida(){
-	console.log('inicia..');
+	/*console.log('inicia..');
 	var ActiveDirectory = require('activedirectory');
 	var config = { url: 'ldap://cosapi.local',
 				baseDN: '',
@@ -38,7 +38,7 @@ function Valida(){
 		console.log('Authentication failed!');
 	}
 	});
-	
+
 	ad.userExists(username, function(err, exists) {
 		if (err) {
 		  console.log('ERROR: ' +JSON.stringify(err));
@@ -46,7 +46,28 @@ function Valida(){
 		}
 	   
 		console.log(username + ' exists: ' + exists);
-	  });
+	  });*/
+
+	  var ActiveDirectory = require('activedirectory');
+		var config = {
+			url: 'ldap://Cosapi.local' //,
+				// baseDN: 'dc=domain,dc=com'
+		};
+		var ad = new ActiveDirectory(config);
+		var username = 'pruebaco2@cosapi.com.pe';
+		var password = 'Cosapi2019';
+		// Authenticate
+		ad.authenticate(username, password, function(err, auth) {
+			if (err) {
+				console.log('ERROR: ' + JSON.stringify(err));
+				return;
+			}
+			if (auth) {
+				console.log('Authenticated!');
+			} else {
+				console.log('Authentication failed!');
+			}
+		});
 }
 
 
@@ -57,7 +78,8 @@ app.set('view options', {
 app.use(express.static('public'));
 app.get('', function(req, res){
 	Valida();
-    res.sendFile(__dirname + '/public/view/login_simple.html');
+	res.sendFile(__dirname + '/public/view/login_simple.html');
+	//res.sendFile(__dirname + '/nn.html');
 });
 app.get('/prueba', function(req, res){
     res.sendFile(__dirname + '/libros.html');
