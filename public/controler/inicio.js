@@ -774,6 +774,7 @@ function Autollenado(){
 }
 
 function Cargar(){
+	console.log("tablaEm",$tablaEmpleado);
 	if($tablaEmpleado==""){
 		CallService($miProyecto,"inicial");
 	} else {
