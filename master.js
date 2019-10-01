@@ -14,13 +14,48 @@ var puerto = 8001;
 
 server.listen(puerto);
 
+function Valida(){
+	console.log('inicia..');
+	var ActiveDirectory = require('activedirectory');
+	var config = { url: 'ldap://cosapi.local',
+				baseDN: '',
+				username: 'sistemas.cosapi',
+				password: 'hapsy74' }
+	var ad = new ActiveDirectory(config);
+	var username = 'pruebaco2';
+	var password = 'Cosapi2019';
+	
+	/*ad.authenticate(username, password, function(err, auth) {
+	if (err) {
+		console.log('ERROR: '+JSON.stringify(err));
+		return;
+	}
+	
+	if (auth) {
+		console.log('Authenticated!');
+	}
+	else {
+		console.log('Authentication failed!');
+	}
+	});*/
+	ad.userExists(username, function(err, exists) {
+		if (err) {
+		  console.log('ERROR: ' +JSON.stringify(err));
+		  return;
+		}
+	   
+		console.log(username + ' exists: ' + exists);
+	  });
+}
+
+
 //Marco la ruta de acceso y la vista a mostrar
 app.set('view options', {
 	  layout: false
 	});
 app.use(express.static('public'));
 app.get('', function(req, res){
-	//BD2();
+	Valida();
     res.sendFile(__dirname + '/public/view/login_simple.html');
 });
 app.get('/prueba', function(req, res){
@@ -52,6 +87,8 @@ app.get('/inicio', function(req, res){
     });
     
 });
+
+
 
     	
 function BD2(){
