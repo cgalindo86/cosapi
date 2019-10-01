@@ -25,7 +25,7 @@ function Valida(){
 	var username = 'pruebaco2';
 	var password = 'Cosapi2019';
 	
-	/*ad.authenticate(username, password, function(err, auth) {
+	ad.authenticate(username, password, function(err, auth) {
 	if (err) {
 		console.log('ERROR: '+JSON.stringify(err));
 		return;
@@ -37,7 +37,8 @@ function Valida(){
 	else {
 		console.log('Authentication failed!');
 	}
-	});*/
+	});
+	
 	ad.userExists(username, function(err, exists) {
 		if (err) {
 		  console.log('ERROR: ' +JSON.stringify(err));
