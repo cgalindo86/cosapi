@@ -458,6 +458,38 @@ function init(){
 			Deshabilitar();
 		});
 
+		socket.on("recibeValCodArea",function(data){
+			if(data==1){
+				$("#mval").html('<p style="color: #ff0000;">No disponible</p>');
+			} else {
+				$("#mval").html('<p style="color: #00ff00;">Disponible</p>');
+			}
+		});
+
+		socket.on("recibeValCodFuncion",function(data){
+			if(data==1){
+				$("#mval2").html('<p style="color: #ff0000;">No disponible</p>');
+			} else {
+				$("#mval2").html('<p style="color: #00ff00;">Disponible</p>');
+			}
+		});
+
+		socket.on("recibeValCodPerfil",function(data){
+			if(data==1){
+				$("#mval3").html('<p style="color: #ff0000;">No disponible</p>');
+			} else {
+				$("#mval3").html('<p style="color: #00ff00;">Disponible</p>');
+			}
+		});
+
+		socket.on("recibeValCodOpcion",function(data){
+			if(data==1){
+				$("#mval4").html('<p style="color: #ff0000;">No disponible</p>');
+			} else {
+				$("#mval4").html('<p style="color: #00ff00;">Disponible</p>');
+			}
+		});
+
 }
 
 function Deshabilitar(){
@@ -626,14 +658,20 @@ function GuardaArea(){
 
 	var eliminado = document.getElementById("selectAreaEliminada").value;
 
-	if(eliminado==0){
-		socket.emit("GuardaArea",{codigo:acodigo, descripcion:anombre, estado:aestado});
+	if(acodigo!="" && anombre!="" && aestado!=""){
+
+		if(eliminado==0){
+			socket.emit("GuardaArea",{codigo:acodigo, descripcion:anombre, estado:aestado});
+		} else {
+			//alert(eliminado);
+			socket.emit("GuardaArea2",{codigo:eliminado});
+		}
+		Area();
+
 	} else {
-		//alert(eliminado);
-		socket.emit("GuardaArea2",{codigo:eliminado});
+		alert("Verifique datos ingresados");
 	}
 	
-	//Area();
 }
 
 function GuardaFuncion(){
@@ -643,14 +681,18 @@ function GuardaFuncion(){
 
 	var eliminado = document.getElementById("selectFuncionEliminada").value;
 
-	if(eliminado==0){
-		socket.emit("GuardaFuncion",{codigo:fcodigo, descripcion:fnombre, estado:festado});
+	if(fcodigo!="" && fnombre!="" && festado!=""){
+		if(eliminado==0){
+			socket.emit("GuardaFuncion",{codigo:fcodigo, descripcion:fnombre, estado:festado});
+		} else {
+			//alert(eliminado);
+			socket.emit("GuardaFuncion2",{codigo:eliminado});
+		}
+		Funcion();
 	} else {
-		//alert(eliminado);
-		socket.emit("GuardaFuncion2",{codigo:eliminado});
+		alert("Verifique datos ingresados");
 	}
-	//socket.emit("GuardaFuncion",{codigo:fcodigo, descripcion:fnombre, estado:festado});
-	Funcion();
+	
 }
 
 function GuardaPerfil(){
@@ -660,24 +702,39 @@ function GuardaPerfil(){
 	var pnombre = document.getElementById("pnombre").value;
 	var pestado = document.getElementById("estadop").value;
 
-	socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado});
-	Perfil();
+	if(pcodigo!="" && pnombre!="" && pestado!=""){
+		socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado});
+		Perfil();
+
+	} else {
+		alert("Verifique datos ingresados");
+	}
+	
+	
 }
 
 function GuardaOpciones(){
 	//alert("x");
 	
-	var pcodigo = document.getElementById("ocodigo").value;
-	var pnombre = document.getElementById("onombre").value;
-	var pestado = document.getElementById("estadoo").value;
+	var ocodigo = document.getElementById("ocodigo").value;
+	var onombre = document.getElementById("onombre").value;
+	var oestado = document.getElementById("estadoo").value;
 
-	socket.emit("GuardaOpciones",{codigo:ocodigo, descripcion:onombre, estado:oestado});
-	OpcionSistema();
+	if(ocodigo!="" && onombre!="" && oestado!=""){
+		socket.emit("GuardaOpciones",{codigo:ocodigo, descripcion:onombre, estado:oestado});
+		OpcionSistema();
+
+	} else {
+		alert("Verifique datos ingresados");
+	}
+	
 }
 
 function GuardarEmpl(){
 	var lista = listaEmpleado.split("#");
-	for(var i=0; i<ext-1; i++){
+	//ext = data.length;
+	console.log("ext",ext);
+	for(var i=0; i<ext ; i++){
 		$txt1 = "datepickeri"+i;
 		$txt2 = "datepickerf"+i;
 		$txt3 = "AreaSelectVal_"+i;
@@ -686,7 +743,7 @@ function GuardarEmpl(){
 		var fec2 = document.getElementById($txt2).value;
 		var sel = document.getElementById($txt3).value;
 		var text = texto.options[texto.selectedIndex].innerText;
-		console.log(fec1+" "+fec2+" "+sel+" "+text);	
+		console.log('Actualizar empleado',fec1+" "+fec2+" "+sel+" "+text);	
 
 		socket.emit("ActualizaEmpleado",{
 			fechaInicio:fec1,
@@ -1070,4 +1127,28 @@ function AgregarArea(){
 
 function AgregarFuncion(){
 	socket.emit("ConsultaFuncion2","");
+}
+
+function valCod($filtro){
+	if($filtro=="area"){
+		$val = $("#acodigo").val();
+		console.log("acodigo",$val);
+		socket.emit("ValidaCodigoArea",{area:$val});
+		
+	} else if($filtro=="funcion"){
+		$val = $("#fcodigo").val();
+		console.log("fcodigo",$val);
+		socket.emit("ValidaCodigoFuncion",{funcion:$val});
+		
+	} else if($filtro=="perfil"){
+		$val = $("#pcodigo").val();
+		console.log("pcodigo",$val);
+		socket.emit("ValidaCodigoPerfil",{perfil:$val});
+		
+	} else if($filtro=="opcion"){
+		$val = $("#ocodigo").val();
+		console.log("ocodigo",$val);
+		socket.emit("ValidaCodigoOpcion",{opcion:$val});
+		
+	} 
 }

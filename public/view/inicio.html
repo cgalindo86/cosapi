@@ -852,13 +852,13 @@
 								<h6 class="font-weight-semibold">DATOS</h6>
 								<div class="form-group row">
 									<div style="justify-content: center; align-items: center;">
-										<div style="display:inline-block; margin-right:5px;"><input id="acodigo" type="text" style="width:200px;" placeholder="CODIGO"></div>
+										<div style="display:inline-block; margin-right:5px;"><input id="acodigo" onkeyup="valCod('area')" type="number" style="width:200px;" placeholder="CODIGO"></div>
 										<div style="display:inline-block; margin-right:5px;"><input id="anombre" type="text" style="width:200px;" placeholder="DESCRIPCION"></div>
 										<select id="estadoa">
 											<option value="1">ACTIVO</option>
 											<option value="0">INACTIVO</option>
 										</select>
-										
+										<div id="mval"></div>
 									</div>
 								</div>
 								<br>
@@ -890,13 +890,13 @@
 								<h6 class="font-weight-semibold">DATOS</h6>
 								<div class="form-group row">
 									<div style="justify-content: center; align-items: center;">
-										<div style="display:inline-block; margin-right:5px;"><input id="fcodigo" type="text" style="width:200px;" placeholder="CODIGO"></div>
+										<div style="display:inline-block; margin-right:5px;"><input id="fcodigo" type="number" onkeyup="valCod('funcion')" style="width:200px;" placeholder="CODIGO"></div>
 										<div style="display:inline-block; margin-right:5px;"><input id="fnombre" type="text" style="width:200px;" placeholder="DESCRIPCION"></div>
 										<select id="estadof">
 											<option value="1">ACTIVO</option>
 											<option value="0">INACTIVO</option>
 										</select>
-										
+										<div id="mval2"></div>
 									</div>
 								</div>
 								<br>
@@ -928,13 +928,13 @@
 								<h6 class="font-weight-semibold">DATOS</h6>
 								<div class="form-group row">
 									<div style="justify-content: center; align-items: center;">
-										<div style="display:inline-block; margin-right:5px;"><input id="pcodigo" type="text" style="width:200px;" placeholder="CODIGO"></div>
+										<div style="display:inline-block; margin-right:5px;"><input id="pcodigo" onkeyup="valCod('perfil')" type="text" style="width:200px;" placeholder="CODIGO"></div>
 										<div style="display:inline-block; margin-right:5px;"><input id="pnombre" type="text" style="width:200px;" placeholder="DESCRIPCION"></div>
 										<select id="estadop">
 											<option value="1">ACTIVO</option>
 											<option value="0">INACTIVO</option>
 										</select>
-										
+										<div id="mval3"></div>
 									</div>
 								</div>
 								<br>
@@ -966,13 +966,13 @@
 								<h6 class="font-weight-semibold">DATOS</h6>
 								<div class="form-group row">
 									<div style="justify-content: center; align-items: center;">
-										<div style="display:inline-block; margin-right:5px;"><input id="ocodigo" type="text" style="width:200px;" placeholder="CODIGO"></div>
+										<div style="display:inline-block; margin-right:5px;"><input id="ocodigo" onkeyup="valCod('opcion')" type="text" style="width:200px;" placeholder="CODIGO"></div>
 										<div style="display:inline-block; margin-right:5px;"><input id="onombre" type="text" style="width:200px;" placeholder="DESCRIPCION"></div>
 										<select id="estadop">
 											<option value="1">ACTIVO</option>
 											<option value="0">INACTIVO</option>
 										</select>
-										
+										<div id="mval4"></div>
 									</div>
 								</div>
 								<br>

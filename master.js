@@ -441,6 +441,7 @@ io.sockets.on('connection', function(socket) {
 							[data.fechaInicio,data.fechaFin,data.empleado,data.proyecto],
 							{ autoCommit: true });
 						console.log("Rows updated 2: " + result.rowsAffected);
+
 					} else if(consulta=="10"){
 						var respuesta=""; 
 						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
@@ -928,6 +929,42 @@ io.sockets.on('connection', function(socket) {
 						
 						io.sockets.emit("recibeFuncion2",result);
 						
+					} else if(consulta=="36"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM AREA_EMPLEADO WHERE AREA_EMPLEADO = '"+data.area+"'";
+						result = await connection.execute(sql);
+						var a;
+						
+						console.log("cont",result.rows.length);
+						io.sockets.emit("recibeValCodArea",result.rows.length);
+						
+					} else if(consulta=="37"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM CARGO_EMPLEADO WHERE CARGO_EMPLEADO = '"+data.funcion+"'";
+						result = await connection.execute(sql);
+						var a;
+						
+						console.log("cont",result.rows.length);
+						io.sockets.emit("recibeValCodFuncion",result.rows.length);
+						
+					} else if(consulta=="38"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM ROL WHERE ROL = '"+data.perfil+"'";
+						result = await connection.execute(sql);
+						var a;
+						
+						console.log("cont",result.rows.length);
+						io.sockets.emit("recibeValCodPerfil",result.rows.length);
+						
+					} else if(consulta=="39"){
+						var respuesta=""; 
+						var sql = "SELECT * FROM ACCION WHERE ACCION = '"+data.opcion+"'";
+						result = await connection.execute(sql);
+						var a;
+						
+						console.log("cont",result.rows.length);
+						io.sockets.emit("recibeValCodOpcion",result.rows.length);
+						
 					}
 					/*
 					
@@ -1034,6 +1071,7 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('ActualizaEmpleado', function(data) {
+		console.log(data);
 		BD2("9",data);
 	});
 
@@ -1142,5 +1180,20 @@ io.sockets.on('connection', function(socket) {
 		BD2("35",data);
 	});
 
+	socket.on('ValidaCodigoArea', function(data) {
+		BD2("36",data);
+	});
+
+	socket.on('ValidaCodigoFuncion', function(data) {
+		BD2("37",data);
+	});
+
+	socket.on('ValidaCodigoPerfil', function(data) {
+		BD2("38",data);
+	});
+
+	socket.on('ValidaCodigoOpcion', function(data) {
+		BD2("39",data);
+	});
 	
 });
