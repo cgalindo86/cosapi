@@ -60,7 +60,7 @@ app.set('view options', {
 	});
 app.use(express.static('public'));
 app.get('', function(req, res){
-	//Valida();
+	
 	res.sendFile(__dirname + '/public/view/login_simple.html');
 	//res.sendFile(__dirname + '/nn.html');
 });
@@ -1107,8 +1107,8 @@ io.sockets.on('connection', function(socket) {
 	
 	socket.on('login', function(data) {
 		//BD("2",data);
-		//BD2("2",data);
-		Valida(data);
+		BD2("2",data);
+		//Valida(data);
 	});
 
 	socket.on('busca nombre', function(data) {
