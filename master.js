@@ -862,7 +862,7 @@ io.sockets.on('connection', function(socket) {
 						
 					} else if(consulta=="27"){
 						
-						var sql = "SELECT * FROM ACCION WHERE ESTADO ='1' ";
+						var sql = "SELECT * FROM ACCION WHERE SISTEMA ='1' ";
 						result = await connection.execute(sql);
 						var a;
 						
@@ -870,7 +870,7 @@ io.sockets.on('connection', function(socket) {
 						
 					} else if(consulta=="28"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM ACCION WHERE ACCION = '"+data.codigo+"' AND ESTADO = '1'";
+						var sql = "SELECT * FROM ACCION WHERE ACCION = '"+data.codigo+"' AND SISTEMA = '1'";
 						result = await connection.execute(sql);
 						var a;
 						var reg=0;
@@ -884,14 +884,14 @@ io.sockets.on('connection', function(socket) {
 
 						if(respuesta==""){
 							let result = await connection.execute(
-								`INSERT INTO ACCION (ACCION,DESCRIPCION_ACCION,ESTADO) 
-								VALUES (:ACCION,:DESCRIPCION_ACCION, :ESTADO)`,
+								`INSERT INTO ACCION (ACCION,DESCRIPCION_ACCION,SISTEMA) 
+								VALUES (:ACCION,:DESCRIPCION_ACCION, :SISTEMA)`,
 								[reg,data.descripcion, data.estado],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
 							
 						} 
 						
-						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						var sql = "SELECT * FROM ACCION WHERE SISTEMA = '1'";
 						result = await connection.execute(sql);
 						var a;
 						
@@ -901,14 +901,14 @@ io.sockets.on('connection', function(socket) {
 					} else if(consulta=="29"){
 						var respuesta=""; 
 						result = await connection.execute(
-							`UPDATE ACCION SET DESCRIPCION_ACCION = : DESCRIPCION_ACCION, ESTADO = :ESTADO
+							`UPDATE ACCION SET DESCRIPCION_ACCION = : DESCRIPCION_ACCION, SISTEMA = :SISTEMA
 							WHERE ACCION = :ACCION`,
 							[data.descripcion,data.estado,data.codigo],
 							{ autoCommit: true });  
 						console.log("Rows updated: " + result.rowsAffected);
 
 						var respuesta=""; 
-						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						var sql = "SELECT * FROM ACCION WHERE SISTEMA = '1'";
 						result = await connection.execute(sql);
 						var a;
 						
@@ -935,14 +935,14 @@ io.sockets.on('connection', function(socket) {
 					} else if(consulta=="31"){
 						var respuesta=""; 
 						result = await connection.execute(
-							`UPDATE ACCION SET ESTADO = :ESTADO
+							`UPDATE ACCION SET SISTEMA = :SISTEMA
 							WHERE ACCION = :ACCION`,
 							[data.estado,data.codigo],
 							{ autoCommit: true });  
 						console.log("Rows updated: " + result.rowsAffected);
 
 						var respuesta=""; 
-						var sql = "SELECT * FROM ACCION WHERE ESTADO = '1'";
+						var sql = "SELECT * FROM ACCION WHERE SISTEMA = '1'";
 						result = await connection.execute(sql);
 						var a;
 						
