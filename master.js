@@ -50,7 +50,7 @@ function Valida(){
 
 	  var ActiveDirectory = require('activedirectory');
 		var config = {
-			url: 'ldap://Cosapi.local' //,
+			url: 'ldap://cosapi.local:389' //,
 				// baseDN: 'dc=domain,dc=com'
 		};
 		var ad = new ActiveDirectory(config);
