@@ -726,9 +726,11 @@ function GuardaPerfil(){
 	var pcodigo = document.getElementById("pcodigo").value;
 	var pnombre = document.getElementById("pnombre").value;
 	var pestado = document.getElementById("estadop").value;
+	var paccion = document.getElementById("AccionSelectVal").value;
+	
 
 	if(pcodigo!="" && pnombre!="" && pestado!=""){
-		socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado});
+		socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado, accion: paccion2});
 		Perfil();
 
 	} else {
@@ -1109,6 +1111,15 @@ function EditPerfil2(a){
 	$("#cuerpoPerfil2").hide();
 	$("#cuerpoPerfil").show();
 	$("#cabeceraPerfil").show();
+	var paccion = document.getElementById("AccionSelectVal").value;
+	console.log(paccion);
+	var paccion2 = '';
+	if(paccion!="0"){
+		console.log(paccion);
+		paccion2 = paccion;
+	} else {
+		paccion2 = '';	
+	}
 	//var larea = listaArea.split("#");
 	//var lnomArea = listaNomArea.split("#");
 	var pcodigo2 = document.getElementById("pcodigo2").value;
@@ -1117,7 +1128,7 @@ function EditPerfil2(a){
 
 	console.log(pcodigo2+ " " + pnombre2);
 	
-	socket.emit("EditaPerfil",{codigo:pcodigo2,descripcion:pnombre2,estado:pestado});
+	socket.emit("EditaPerfil",{codigo:pcodigo2,descripcion:pnombre2,estado:pestado,accion:paccion2});
 	Perfil();
 }
 

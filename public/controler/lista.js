@@ -20,7 +20,7 @@ function init(){
 		var ext = data.MsgData.Transaction.CO_PROJ_INFH_WK.CO_PROJ_INFD_WK.length;
 		$resultServices = data.MsgData.Transaction.CO_PROJ_INFH_WK.CO_PROJ_INFD_WK;
 		
-		var respuesta;
+		var respuesta = "";
 		$("#mgif").show();
 		for(i =0; i<ext; i++){
 			var a;
@@ -60,7 +60,7 @@ function init(){
 	socket.on("miServicio2",function(data){
 		$resultServices2 = data;
 		console.log("entrada mi servicio 2",$resultServices2.rows[0]);
-		var respuesta;
+		var respuesta = "";
 		var a;
 		for(a=0; a<data.rows.length; a++){
 			var string=JSON.stringify(data.rows[a]);
@@ -91,7 +91,7 @@ function Bbuscar(){
 			var data4,data5,codigo,descr,unidad,nomunidad;
 				var ext = $resultServices.length;
 				console.log("ext "+ext);
-				var respuesta;
+				var respuesta = "";
 				
 				for(i =0; i<ext; i++){
 					var a;
@@ -129,7 +129,7 @@ function Bbuscar(){
 				$("#mgif").hide();
 		} else {
 			//$resultServices = data.rows;
-			var respuesta;
+			var respuesta = "";
 			var a;
 			for(a=0; a<$resultServices2.rows.length; a++){
 				var string=JSON.stringify($resultServices2.rows[a]);
@@ -202,7 +202,7 @@ function UnidadesSelect(){
 		if(filtrado=="miServicio"){
 			var ext = $resultServices.length;
 			console.log("ext "+ext);
-			var respuesta;
+			var respuesta = "";
 			$("#mgif").show();
 			for(i =0; i<ext; i++){
 				var a;
@@ -235,7 +235,7 @@ function UnidadesSelect(){
 			}
 		} else {
 			//$resultServices = data.rows;
-			var respuesta;
+			var respuesta = "";
 			var a;
 			//console.log("extension",$resultServices2.rows.length);
 			//console.log("un dato",$resultServices2.rows[0]);

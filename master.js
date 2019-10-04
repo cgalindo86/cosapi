@@ -14,39 +14,8 @@ var puerto = 8001;
 
 server.listen(puerto);
 
-function Valida(){
-	/*console.log('inicia..');
-	var ActiveDirectory = require('activedirectory');
-	var config = { url: 'ldap://cosapi.local',
-				baseDN: '',
-				username: 'sistemas.cosapi',
-				password: 'hapsy74' }
-	var ad = new ActiveDirectory(config);
-	var username = 'pruebaco2';
-	var password = 'Cosapi2019';
+function Valida(data){
 	
-	ad.authenticate(username, password, function(err, auth) {
-	if (err) {
-		console.log('ERROR: '+JSON.stringify(err));
-		return;
-	}
-	
-	if (auth) {
-		console.log('Authenticated!');
-	}
-	else {
-		console.log('Authentication failed!');
-	}
-	});
-
-	ad.userExists(username, function(err, exists) {
-		if (err) {
-		  console.log('ERROR: ' +JSON.stringify(err));
-		  return;
-		}
-	   
-		console.log(username + ' exists: ' + exists);
-	  });*/
 
 	  var ActiveDirectory = require('activedirectory');
 		var config = {
@@ -54,8 +23,10 @@ function Valida(){
 			//baseDN: 'cosapi=local'
 		};
 		var ad = new ActiveDirectory(config);
-		var username = 'pruebaco2@cosapi.com.pe';
-		var password = 'Cosapi2019';
+		var username = data.usuario;
+		var password = data.password;
+		//var username = 'pruebaco2@cosapi.com.pe';
+		//var password = 'Cosapi2019';
 		// Authenticate
 		ad.authenticate(username, password, function(err, auth) {
 			if (err) {
@@ -63,7 +34,9 @@ function Valida(){
 				return;
 			}
 			if (auth) {
-				console.log('Authenticated!');
+				console.log('Authenticated!!!');
+				//BD2("2",data);
+				io.sockets.emit('validacion', {nombre: username, id:"1", resultado:"ok"});
 			} else {
 				console.log('Authentication failed!');
 			}
@@ -87,7 +60,7 @@ app.set('view options', {
 	});
 app.use(express.static('public'));
 app.get('', function(req, res){
-	Valida();
+	//Valida();
 	res.sendFile(__dirname + '/public/view/login_simple.html');
 	//res.sendFile(__dirname + '/nn.html');
 });
@@ -124,7 +97,7 @@ app.get('/inicio', function(req, res){
 
 
     	
-function BD2(){
+function BD2(consulta,data){
 	
 	var connection;
 	async function run(){
@@ -135,17 +108,25 @@ function BD2(){
 				connectString: "dscope.cosapi.com.pe/desa"
 			});
 
-			result = await connection.execute('SELECT * FROM EMPLEADO');
-
-			
+			var usuario = data.usuario;
+			var password = data.password;
+			var sql = "SELECT * FROM USUARIO WHERE USERNAME = '"+usuario+"'";
+			console.log(usuario + " - " + password + "\n"+sql);
+			result = await connection.execute(sql);
 			var a;
 			for(a=0; a<result.rows.length; a++){
 				var string=JSON.stringify(result.rows[a]);
 				var json =  JSON.parse(string);
-
-				console.log("Result master "+a+": "+ json);
-				console.log("Result hijos: "+ json[3] + " - " + json[4]);
-				
+			
+				if(json[1]!=null){
+					console.log("val1");				
+					io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"ok"});
+								
+				} else {
+					console.log("val2");
+					io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"no ok"});
+							
+				}
 			}
 			
 		} catch(err){
@@ -197,7 +178,7 @@ io.sockets.on('connection', function(socket) {
 					} else if(consulta=="2"){
 						var usuario = data.usuario;
 						var password = data.password;
-						var sql = "SELECT * FROM USUARIO WHERE TELEFONO = '"+password+"' AND USERNAME = '"+usuario+"'";
+						var sql = "SELECT * FROM USUARIO WHERE USERNAME = '"+usuario+"'";
 						console.log(usuario + " - " + password + "\n"+sql);
 						result = await connection.execute(sql);
 						var a;
@@ -834,6 +815,27 @@ io.sockets.on('connection', function(socket) {
 							{ autoCommit: true });  
 						console.log("Rows updated: " + result.rowsAffected);
 
+						var sql = "SELECT * FROM ACCION_ROL WHERE ROL = '"+data.codigo+"' AND ACCION = '"+data.accion+"'";
+						result = await connection.execute(sql);
+						var a;
+						var reg=1;
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+							reg++;
+						}
+
+
+						if(respuesta==""){
+							let result = await connection.execute(
+								`INSERT INTO ACCION_ROL (ACCION,ROL,ESTADO) 
+								VALUES (:ACCION, :ROL, :ESTADO)`,
+								[data.accion,data.codigo,data.estado],{ autoCommit: true});
+							console.log("Rows inserted: " + result.rowsAffected);
+							
+						}
+
 						var respuesta=""; 
 						var sql = "SELECT * FROM ROL WHERE ESTADO = '1'";
 						result = await connection.execute(sql);
@@ -1105,7 +1107,8 @@ io.sockets.on('connection', function(socket) {
 	
 	socket.on('login', function(data) {
 		//BD("2",data);
-		BD2("2",data);
+		//BD2("2",data);
+		Valida(data);
 	});
 
 	socket.on('busca nombre', function(data) {
