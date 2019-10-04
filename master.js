@@ -51,7 +51,7 @@ function Valida(){
 	  var ActiveDirectory = require('activedirectory');
 		var config = {
 			url: 'ldap://cosapi.local:389' //,
-				// baseDN: 'dc=domain,dc=com'
+			//baseDN: 'cosapi=local'
 		};
 		var ad = new ActiveDirectory(config);
 		var username = 'pruebaco2@cosapi.com.pe';
@@ -59,7 +59,7 @@ function Valida(){
 		// Authenticate
 		ad.authenticate(username, password, function(err, auth) {
 			if (err) {
-				console.log('ERROR: ' + JSON.stringify(err));
+				console.log('iERROR: ' + JSON.stringify(err));
 				return;
 			}
 			if (auth) {
@@ -68,6 +68,16 @@ function Valida(){
 				console.log('Authentication failed!');
 			}
 		});
+
+		/*ad.userExists(username, function(err, exists) {
+			if (err) {
+			  console.log('iiERROR: ' +JSON.stringify(err));
+			  return;
+			}
+		  
+			console.log(username + ' exists: ' + exists);
+		  });
+		  */
 }
 
 

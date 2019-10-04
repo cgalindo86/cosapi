@@ -11,7 +11,7 @@ var $tablaIncidencia = '';
 var ext;
 var listaEmpleado='',listaArea='',listaNomArea='',listaFuncion='',listaNomFuncion='',
 	listaPerfil='',listaNomPerfil='',listaOpciones='',listaNomOpciones='';
-
+var anio,mes,dia,hora,minutos,segundos,aniomes,lafecha;
 
 MainApp();
 
@@ -21,14 +21,38 @@ function MainApp() {
 		
 function init(){
 
-		socket.on("ParametrosInicio2",function(xdata){
+	var fecha = new Date();
+	
+	dia = fecha.getDate();
+	mes = fecha.getMonth() + 1;
+	anio = fecha.getFullYear();
+	hora = fecha.getHours();
+	minutos = fecha.getMinutes();
+	segundos = fecha.getSeconds();
+	aniomes = anio + "" + mes;
+	lafecha = anio+"-"+mes+"-"+dia;
+
+	//document.getElementById("selectPeriodo").innerHTML = '<select id="periodo" style="margin-top: 50px"><option value="'+aniomes+'">Periodo '+aniomes+'</option></select>';
+	
+	socket.on("ParametrosInicio2",function(xdata){
+		var fecha = new Date();
+	
+		dia = fecha.getDate();
+		mes = fecha.getMonth() + 1;
+		anio = fecha.getFullYear();
+		hora = fecha.getHours();
+		minutos = fecha.getMinutes();
+		segundos = fecha.getSeconds();
+		aniomes = anio + "" + mes;
+		lafecha = anio+"-"+mes+"-"+dia;
+
 			$miSuperId = xdata.id;
 			$miProyecto = xdata.miProyecto;
 			$miNombre = xdata.miNombre;
 
 			console.log("ini2: "+$miProyecto+" "+$miNombre+" "+$miSuperId);
 
-			socket.emit("ConsultaProyecto",{proyecto:$miProyecto,periodo:"201909",usuario:"admin",fecha:"",estado:"Activo"});
+			socket.emit("ConsultaProyecto",{proyecto:$miProyecto,periodo:aniomes,usuario:"admin",fecha:lafecha,estado:"Activo"});
 			$miNombre = $miNombre.replace("_"," ");
 
 			//$("#codProy").html($miProyecto +" - "+ $miNombre);
@@ -231,6 +255,7 @@ function init(){
 		});
 
 		socket.on("DatosProyecto",function(xdata){
+			document.getElementById("selectPeriodo").innerHTML = '<select id="periodo" style="margin-top: 50px"><option value="'+aniomes+'">Periodo '+aniomes+'</option></select>';
 			var mensaje = "";
 			if(xdata.proyecto==""){
 				mensaje = "NO existe información para este proyecto y periodo";
@@ -354,10 +379,10 @@ function init(){
 			
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>CODIGO</td><td>APELLIDOS Y NOMBRES</td>';
-			tabla = tabla + '<td>F. INICIO</td><td>F. FIN</td><td>2019-01</td>';
-			tabla = tabla + '<td>2019-02</td><td>2019-03</td><td>2019-04</td><td>2019-05</td>';
-			tabla = tabla + '<td>2019-06</td><td>2019-07</td><td>2019-08</td><td>2019-09</td>';
-			tabla = tabla + '<td>2019-10</td><td>2019-11</td><td>2019-12</td></tr></thead>';
+			tabla = tabla + '<td>F. INICIO</td><td>F. FIN</td><td>'+anio+'-01</td>';
+			tabla = tabla + '<td>'+anio+'-02</td><td>'+anio+'-03</td><td>'+anio+'-04</td><td>'+anio+'-05</td>';
+			tabla = tabla + '<td>'+anio+'-06</td><td>'+anio+'-07</td><td>'+anio+'-08</td><td>'+anio+'-09</td>';
+			tabla = tabla + '<td>'+anio+'-10</td><td>'+anio+'-11</td><td>'+anio+'-12</td></tr></thead>';
 			tabla = tabla+'<tbody>';
 			
 			var mdata = data.incidencia_prevista;
@@ -380,75 +405,75 @@ function init(){
 				tabla = tabla+'<td>'+fechaFx[i]+'</td>';
 
 				if(ldata2[0]!=""){
-					tabla = tabla+'<td><input type="text" id="201901'+i+'" maxlength="5" size="5" value="'+ldata2[0]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'01'+i+'" maxlength="5" size="5" value="'+ldata2[0]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201901'+i+'" maxlength="5" size="5" value="'+ldata[0]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'01'+i+'" maxlength="5" size="5" value="'+ldata[0]+'"></td>';				
 				}
 
 				if(ldata2[1]!=""){
-					tabla = tabla+'<td><input type="text" id="201902'+i+'" maxlength="5" size="5" value="'+ldata2[1]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'02'+i+'" maxlength="5" size="5" value="'+ldata2[1]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201902'+i+'" maxlength="5" size="5" value="'+ldata[1]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'02'+i+'" maxlength="5" size="5" value="'+ldata[1]+'"></td>';				
 				}
 
 				if(ldata2[2]!=""){
-					tabla = tabla+'<td><input type="text" id="201903'+i+'" maxlength="5" size="5" value="'+ldata2[2]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'03'+i+'" maxlength="5" size="5" value="'+ldata2[2]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201903'+i+'" maxlength="5" size="5" value="'+ldata[2]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'03'+i+'" maxlength="5" size="5" value="'+ldata[2]+'"></td>';				
 				}
 
 				if(ldata2[3]!=""){
-					tabla = tabla+'<td><input type="text" id="201904'+i+'" maxlength="5" size="5" value="'+ldata2[3]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'04'+i+'" maxlength="5" size="5" value="'+ldata2[3]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201904'+i+'" maxlength="5" size="5" value="'+ldata[3]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'04'+i+'" maxlength="5" size="5" value="'+ldata[3]+'"></td>';				
 				}
 
 				if(ldata2[4]!=""){
-					tabla = tabla+'<td><input type="text" id="201905'+i+'" maxlength="5" size="5" value="'+ldata2[4]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'05'+i+'" maxlength="5" size="5" value="'+ldata2[4]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201905'+i+'" maxlength="5" size="5" value="'+ldata[4]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'05'+i+'" maxlength="5" size="5" value="'+ldata[4]+'"></td>';				
 				}
 
 				if(ldata2[5]!=""){
-					tabla = tabla+'<td><input type="text" id="201906'+i+'" maxlength="5" size="5" value="'+ldata2[5]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'06'+i+'" maxlength="5" size="5" value="'+ldata2[5]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201906'+i+'" maxlength="5" size="5" value="'+ldata[5]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'06'+i+'" maxlength="5" size="5" value="'+ldata[5]+'"></td>';				
 				}
 
 				if(ldata2[6]!=""){
-					tabla = tabla+'<td><input type="text" id="201907'+i+'" maxlength="5" size="5" value="'+ldata2[6]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'07'+i+'" maxlength="5" size="5" value="'+ldata2[6]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201907'+i+'" maxlength="5" size="5" value="'+ldata[6]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'07'+i+'" maxlength="5" size="5" value="'+ldata[6]+'"></td>';				
 				}
 
 				if(ldata2[7]!=""){
-					tabla = tabla+'<td><input type="text" id="201908'+i+'" maxlength="5" size="5" value="'+ldata2[7]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'08'+i+'" maxlength="5" size="5" value="'+ldata2[7]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201908'+i+'" maxlength="5" size="5" value="'+ldata[7]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'08'+i+'" maxlength="5" size="5" value="'+ldata[7]+'"></td>';				
 				}
 
 				if(ldata2[8]!=""){
-					tabla = tabla+'<td><input type="text" id="201909'+i+'" maxlength="5" size="5" value="'+ldata2[8]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'09'+i+'" maxlength="5" size="5" value="'+ldata2[8]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201909'+i+'" maxlength="5" size="5" value="'+ldata[8]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'09'+i+'" maxlength="5" size="5" value="'+ldata[8]+'"></td>';				
 				}
 
 				if(ldata2[9]!=""){
-					tabla = tabla+'<td><input type="text" id="201910'+i+'" maxlength="5" size="5" value="'+ldata2[9]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'10'+i+'" maxlength="5" size="5" value="'+ldata2[9]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201910'+i+'" maxlength="5" size="5" value="'+ldata[9]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'10'+i+'" maxlength="5" size="5" value="'+ldata[9]+'"></td>';				
 				}
 
 				if(ldata2[10]!=""){
-					tabla = tabla+'<td><input type="text" id="201911'+i+'" maxlength="5" size="5" value="'+ldata2[10]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'11'+i+'" maxlength="5" size="5" value="'+ldata2[10]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201911'+i+'" maxlength="5" size="5" value="'+ldata[10]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'11'+i+'" maxlength="5" size="5" value="'+ldata[10]+'"></td>';				
 				}
 
 				if(ldata2[11]!=""){
-					tabla = tabla+'<td><input type="text" id="201912'+i+'" maxlength="5" size="5" value="'+ldata2[11]+'"></td>';
+					tabla = tabla+'<td><input type="text" id="'+anio+'12'+i+'" maxlength="5" size="5" value="'+ldata2[11]+'"></td>';
 				} else {
-					tabla = tabla+'<td><input type="text" id="201912'+i+'" maxlength="5" size="5" value="'+ldata[11]+'"></td>';				
+					tabla = tabla+'<td><input type="text" id="'+anio+'12'+i+'" maxlength="5" size="5" value="'+ldata[11]+'"></td>';				
 				}
 
 			}
@@ -495,7 +520,7 @@ function init(){
 function Deshabilitar(){
 	var lista = listaEmpleado.split("#");
 	var ext = lista.length;
-	var eperiodo = 201909;
+	var eperiodo = parseInt(aniomes);
 	var iperiodo;
 		
 	
@@ -503,7 +528,7 @@ function Deshabilitar(){
 		
 		for(var x=1; x<=12; x++){
 			if(x<10){ iperiodo='0'; } else { iperiodo = ''; }
-			iperiodo = "2019" + iperiodo + x;
+			iperiodo = anio + iperiodo + x;
 			if(parseInt(iperiodo)<eperiodo){
 				iperiodo = iperiodo + "" + i;
 				document.getElementById(iperiodo).disabled = true;
@@ -546,7 +571,7 @@ function CallService($miProyecto,$filtro){
 				"EmpleadoApellido":"",
 				"EmpleadoCodigo":"",
 				"EmpleadoNombre":"",
-				"Periodo":"201909",
+				"Periodo":aniomes,
 				"ProyectoCodigo":$miProyecto
 			};
 
@@ -590,7 +615,7 @@ function CallService($miProyecto,$filtro){
 							costo: data[i]["CostoTotal"],
 							estado: data[i]["Estado"],
 							proyecto: $miProyecto,
-							periodo: "201909"
+							periodo: aniomes
 						});
 
 						var pickeri = '<div class="form-group">';
@@ -752,7 +777,7 @@ function GuardarEmpl(){
 			nombreArea:text,
 			empleado: lista[i],
 			proyecto: $miProyecto,
-			periodo: "201909"
+			periodo: aniomes
 		});
 	}
 }
@@ -764,9 +789,9 @@ function GuardarIncidencia(){
 		var iperiodo,eperiodo;
 		for(var x=1; x<=12; x++){
 			if(x<10){ iperiodo='0'; } else { iperiodo = ''; }
-			eperiodo = "2019" + iperiodo + x;
+			eperiodo = anio +""+ iperiodo + x;
 			
-			iperiodo = "2019" + iperiodo + x + i;
+			iperiodo = anio +""+ iperiodo + x + i;
 			/*if(parseInt(iperiodo)<eperiodo){
 				iperiodo = iperiodo + "" + i;
 				document.getElementById(iperiodo).disabled = true;
@@ -792,9 +817,9 @@ function CierrePeriodo(){
 		var iperiodo,eperiodo;
 		/*for(var x=1; x<=12; x++){
 			if(x<10){ iperiodo='0'; } else { iperiodo = ''; }*/
-			eperiodo = "201909";// + iperiodo + x;
+			eperiodo = aniomes;// + iperiodo + x;
 			
-			iperiodo = "201909" + i; //iperiodo + x + i;
+			iperiodo = aniomes + "" + i; //iperiodo + x + i;
 			/*if(parseInt(iperiodo)<eperiodo){
 				iperiodo = iperiodo + "" + i;
 				document.getElementById(iperiodo).disabled = true;
@@ -813,20 +838,36 @@ function CierrePeriodo(){
 }
 
 function Autollenado(){
+	var iimes='';
 	var lista = listaEmpleado.split("#");
 	for(var i=0; i<ext-1; i++){
-		document.getElementById("201901"+i).value = "1.0";
-		document.getElementById("201902"+i).value = "1.0";
-		document.getElementById("201903"+i).value = "1.0";
-		document.getElementById("201904"+i).value = "1.0";
-		document.getElementById("201905"+i).value = "1.0";
-		document.getElementById("201906"+i).value = "1.0";
-		document.getElementById("201907"+i).value = "1.0";
-		document.getElementById("201908"+i).value = "1.0";
-		document.getElementById("201909"+i).value = "1.0";
-		document.getElementById("201910"+i).value = "1.0";
-		document.getElementById("201911"+i).value = "1.0";
-		document.getElementById("201912"+i).value = "1.0";
+		//var a = i+1;
+		
+		for(var b=1; b<=12; b++){
+			if(b>=parseInt(mes)){
+				if(b<10){
+					iimes="0"+b;
+				} else {
+					iimes = b+"";
+				}
+				console.log(anio+""+iimes+""+i);
+				document.getElementById(anio+""+iimes+""+i).value = "1.0";	
+			}
+		}
+		
+		
+		/*document.getElementById(anio +"01"+i).value = "1.0";
+		document.getElementById(anio+"02"+i).value = "1.0";
+		document.getElementById(anio+"03"+i).value = "1.0";
+		document.getElementById(anio+"04"+i).value = "1.0";
+		document.getElementById(anio+"05"+i).value = "1.0";
+		document.getElementById(anio+"06"+i).value = "1.0";
+		document.getElementById(anio+"07"+i).value = "1.0";
+		document.getElementById(anio+"08"+i).value = "1.0";
+		document.getElementById(anio+"09"+i).value = "1.0";
+		document.getElementById(anio+"10"+i).value = "1.0";
+		document.getElementById(anio+"11"+i).value = "1.0";
+		document.getElementById(anio+"12"+i).value = "1.0";*/
 	}
 }
 
@@ -842,7 +883,7 @@ function Cargar(){
 function Proyectos(){
 	Ocultar();
 	$("#campoMensaje").show();
-	socket.emit("ConsultaProyecto",{proyecto:$miProyecto,periodo:"201909",usuario:"admin",fecha:"",estado:"Activo"});
+	socket.emit("ConsultaProyecto",{proyecto:$miProyecto,periodo:aniomes,usuario:"admin",fecha:lafecha,estado:"Activo"});
 	document.getElementById("proyecto").style.background = "#273156";
 	document.getElementById("empleados").style.background = "transparent";
 	document.getElementById("incidencias").style.background = "transparent";
