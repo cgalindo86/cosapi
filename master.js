@@ -439,6 +439,7 @@ io.sockets.on('connection', function(socket) {
 
 
 						if(respuesta==""){
+							console.log("einsert");
 							let result = await connection.execute(
 								`INSERT INTO PROYECTO_PERIODO (PROYECTO,PERIODO,ESTADO,USUARIO_CREACION,FECHA_CREACION) 
 								VALUES (:PROYECTO,:PERIODO,:ESTADO,:USUARIO_CREACION,:FECHA_CREACION)`,
