@@ -803,24 +803,38 @@ io.sockets.on('connection', function(socket) {
 						
 					} else if(consulta=="24"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM ROL WHERE ROL = '"+data.codigo+"' AND ESTADO = '1'";
+						var rrol = parseInt(data.codigo);
+						//var rrol = parseInt(data.codigo);
+						var sql = "SELECT * FROM ROL WHERE ROL = '"+rrol+"' AND ESTADO = '1'";
 						result = await connection.execute(sql);
 						var a;
-						var reg=1;
+						//var reg=1;
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
 							respuesta = json[0]+"";
-							reg++;
+							//reg++;
 						}
 
 
 						if(respuesta==""){
 							let result = await connection.execute(
-								`INSERT INTO ROL (ROL,DESCRIPCION_ROL,ESTADO) 
-								VALUES (:ROL,:DESCRIPCION_CARGO, :ESTADO)`,
-								[reg,data.descripcion, data.estado],{ autoCommit: true});
+								`INSERT INTO ROL (ROL,DESCRIPCION_ROL,SISTEMA,ESTADO) 
+								VALUES (:ROL, :DESCRIPCION_ROL, :SISTEMA, :ESTADO)`,
+								[rrol,data.descripcion, "1", data.estado],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
+
+							var bb = (data.accion).split();
+							for(var i2=0; i2<bb.length; i2++){
+								var nacc = parseInt(bb[i2]);
+
+								let result = await connection.execute(
+									`INSERT INTO ACCION_ROL (ACCION,ROL,ESTADO) 
+									VALUES (:ACCION, :ROL, :ESTADO)`,
+									[nacc,rrol,"1"],{ autoCommit: true});
+								console.log("Rows inserted: " + result.rowsAffected);
+							}
+							
 							
 						} 
 						
@@ -879,15 +893,17 @@ io.sockets.on('connection', function(socket) {
 						var respuesta = '<li class="folder"><a onclick="PAccion()" class="list-icons-item" data-action="collapse"></a>';
 						respuesta = respuesta + '<input type="checkbox" onclick="TotalAccion()" checked> Lista Acciones';
 						respuesta = respuesta + '<div id="ppaccion"><ul>';
-						
-						
+						console.log("arol",data.rol);
+						var rrol = parseInt(data.rol);
+						console.log("rol",rrol);
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
 							
 							var cnd='';
 							var ncont = a+1;
-							var sql2 = "SELECT * FROM ACCION_ROL WHERE ACCION = '"+ncont+"'  AND ROL = '1' ";
+							var sql2 = "SELECT * FROM ACCION_ROL WHERE ACCION = '"+ncont+"'  AND ROL = '"+rrol+"' ";
+							console.log("consulta",sql2);
 							result2 = await connection.execute(sql2);
 							var a2;
 							for(a2=0; a2<result2.rows.length; a2++){
@@ -906,6 +922,9 @@ io.sockets.on('connection', function(socket) {
 							reg++;
 						}
 						respuesta = respuesta + '</ul></div></li>';
+						
+						console.log("envio rol",respuesta);
+						
 						io.sockets.emit("recibeAccion",respuesta);
 						
 					} else if(consulta=="27"){

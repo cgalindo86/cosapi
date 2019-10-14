@@ -13,11 +13,24 @@ var ext;
 var listaEmpleado='',listaArea='',listaNomArea='',listaFuncion='',listaNomFuncion='',
 	listaPerfil='',listaNomPerfil='',listaOpciones='',listaNomOpciones='';
 var anio,mes,dia,hora,minutos,segundos,aniomes,lafecha;
+var cabeceraTabla = '<div class="card">';
+cabeceraTabla = cabeceraTabla + '<div class="card-header header-elements-inline">';
+cabeceraTabla = cabeceraTabla + '<div class="header-elements">';
+cabeceraTabla = cabeceraTabla + '<input id="buscar" onkeyup="Filtrado()" type="text" placeholder="Ingrese texto" style="width:200px;"><div class="list-icons">';
+cabeceraTabla = cabeceraTabla + '<a class="list-icons-item" data-action="collapse"></a>';
+cabeceraTabla = cabeceraTabla + '<a class="list-icons-item" data-action="reload"></a>';
+cabeceraTabla = cabeceraTabla + '<a class="list-icons-item" data-action="remove"></a>';
+cabeceraTabla = cabeceraTabla + '</div>';
+cabeceraTabla = cabeceraTabla + '</div>';
+cabeceraTabla = cabeceraTabla + '</div>';
+cabeceraTabla = cabeceraTabla + '<div class="card-body"></div>';
+
 
 MainApp();
 
 function MainApp() {
 	init();
+
 }
 		
 function init(){
@@ -64,7 +77,7 @@ function init(){
 			socket.emit("BuscaArea","");
 			socket.emit("BuscaFuncion","");
 			socket.emit("BuscaPerfil","");
-			socket.emit("BuscaAcciones","");
+			//socket.emit("BuscaAcciones","");
 			Ocultar();
 			$("#campoMensaje").show();
 
@@ -73,7 +86,8 @@ function init(){
 		socket.on("recibeAccion",function(data){
 			//console.log("acciones "+data);
 			$accionesSelect = data;
-			$("#ppaccion").hide();
+			document.getElementById("select_acciones").innerHTML = $accionesSelect;
+			//$("#ppaccion").hide();
 			listaAcciones = '';
 		});
 
@@ -87,7 +101,7 @@ function init(){
 			var estado='';
 			ext = data.rows.length;
 			//ext = data.length;
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
@@ -111,7 +125,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			console.log("area 2"+tabla);
 			document.getElementById("cuerpoArea").innerHTML = tabla;
 		});
@@ -144,9 +158,10 @@ function init(){
 		socket.on("recibeFuncion2",function(data){
 			console.log("funcion 2"+data);
 			ext = data.rows.length;
-
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
-			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ACCIONES</td>';
+			//var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table id="tabla" class="table table-bordered table-striped">';
+			tabla = tabla + '<thead><tr><th>DESCRIPCION</th><th>ACCIONES</th>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
@@ -164,7 +179,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			document.getElementById("cuerpoFuncion").innerHTML = tabla;
 		});
 
@@ -187,18 +202,21 @@ function init(){
 
 
 		socket.on("recibePerfil2",function(data){
-			console.log("perfil 2"+data);
+			//console.log("perfil 2"+data);
 			var estado='';
-
+			listaPerfil = '';
+			listaNomPerfil = '';
 			ext = data.rows.length;
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table  id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
 			for(i=0; i<ext; i++){
+				var indice = i+1;
 				var string=JSON.stringify(data.rows[i]);
 				var json =  JSON.parse(string);
-
+				console.log("json",json);
+				console.log("json2",json[0]);
 				listaPerfil = listaPerfil + json[0] + "#";
 				listaNomPerfil = listaNomPerfil + json[1] + "#";
 				if(json[3]=="1"){
@@ -207,15 +225,15 @@ function init(){
 					estado="INACTIVO";
 				}
 
-				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditPerfil('+i+')" >';
-				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeletePerfil('+i+')">';
+				var acciones = '<img src="../view/imagenes/editar.png" onclick="EditPerfil('+json[0]+')" >';
+				acciones = acciones + '<img src="../view/imagenes/borrar.png" onclick="DeletePerfil('+json[0]+')">';
 				
 				tabla = tabla+'<tr><td>'+json[1]+'</td>';
 				tabla = tabla+'<td>'+estado+'</td>';
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			document.getElementById("cuerpoPerfil").innerHTML = tabla;
 		});
 
@@ -224,7 +242,7 @@ function init(){
 			var estado='';
 
 			ext = data.rows.length;
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>DESCRIPCION</td><td>ESTADO</td><td>ACCIONES</td>';
 			tabla = tabla + '</tr></thead>';
 			tabla = tabla+'<tbody>';
@@ -248,7 +266,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			document.getElementById("cuerpoOpciones").innerHTML = tabla;
 		});
 		
@@ -258,7 +276,7 @@ function init(){
 		});
 
 		socket.on("DatosProyecto",function(xdata){
-			document.getElementById("selectPeriodo").innerHTML = '<select id="periodo" style="margin-top: 50px"><option value="'+aniomes+'">Periodo '+aniomes+'</option></select>';
+			document.getElementById("selectPeriodo").innerHTML = '<select id="periodo" style="margin-top: 10px"><option value="'+aniomes+'">Periodo '+aniomes+'</option></select>';
 			var mensaje = "";
 			if(xdata.proyecto==""){
 				mensaje = "NO existe información para este proyecto y periodo";
@@ -274,7 +292,7 @@ function init(){
 		socket.on("ResultEmpleado",function(data){
 			var d = data.split("%");
 			var n = d.length;
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table  id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>MATRICULA</td><td>APELLIDOS Y NOMBRES</td><td>UNIDAD FUNCIONAL</td>';
 			tabla = tabla + '<td>F. INGRESO</td><td>F. CESE</td></tr></thead>';
 			tabla = tabla+'<tbody>';
@@ -289,14 +307,14 @@ function init(){
 				tabla = tabla+'<td>'+d2[4]+'</td>';
 				tabla = tabla+'<td><button onclick="Seleccionar('+d2[0]+')">SELECCIONAR</button></td></tr>';
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			document.getElementById("rbusqueda").innerHTML = tabla;
 		});
 
 		socket.on("ResultadoEmpleadoProyecto",function(data){
 			ext = data.rows.length;
 			
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table  id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>MATRICULA</td><td>APELLIDOS Y NOMBRES</td><td>UNIDAD FUNCIONAL</td>';
 			tabla = tabla + '<td>F. INGRESO</td><td>F. CESE</td><td>AREA</td><td>AREA COSTOS</td>';
 			tabla = tabla + '<td>FUNCION</td><td>FUNCION COSTOS</td><td>F. INICIO</td><td>F. FIN</td></tr></thead>';
@@ -360,7 +378,7 @@ function init(){
 				*/
 				//FuncionNombre
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			$tablaEmpleado = tabla;
 			document.getElementById("dataInicial").innerHTML = tabla;
 		});
@@ -380,12 +398,12 @@ function init(){
 
 			ext = codigox.length;
 			
-			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
-			tabla = tabla + '<thead><tr style="background:#ffffff;"><th>CODIGO</th><td>APELLIDOS Y NOMBRES</th>';
-			tabla = tabla + '<th>F. INICIO</th><td>F. FIN</th><th>'+anio+'-01</th>';
-			tabla = tabla + '<th>'+anio+'-02</th><th>'+anio+'-03</th><th>'+anio+'-04</th><th>'+anio+'-05</th>';
-			tabla = tabla + '<th>'+anio+'-06</th><th>'+anio+'-07</th><th>'+anio+'-08</th><th>'+anio+'-09</th>';
-			tabla = tabla + '<th>'+anio+'-10</th><th>'+anio+'-11</th><th>'+anio+'-12</th></tr></thead>';
+			var tabla = cabeceraTabla + '<div class="ex1">' + '<table id="tabla" class="table table-bordered table-striped">';
+			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>CODIGO</td><td>APELLIDOS Y NOMBRES</td>';
+			tabla = tabla + '<td>F. INICIO</td><td>F. FIN</td><td>'+anio+'-01</td>';
+			tabla = tabla + '<td>'+anio+'-02</td><td>'+anio+'-03</td><td>'+anio+'-04</td><td>'+anio+'-05</td>';
+			tabla = tabla + '<td>'+anio+'-06</td><td>'+anio+'-07</td><td>'+anio+'-08</td><td>'+anio+'-09</td>';
+			tabla = tabla + '<td>'+anio+'-10</td><td>'+anio+'-11</td><td>'+anio+'-12</td></tr></thead>';
 			tabla = tabla+'<tbody>';
 			
 			var mdata = data.incidencia_prevista;
@@ -480,7 +498,7 @@ function init(){
 				}
 
 			}
-			tabla = tabla+'</tbody></table></div>';
+			tabla = tabla+'</tbody></table></div></div>';
 			$tablaIncidencia = tabla;
 			document.getElementById("cuerpoIncidencias").innerHTML = tabla;
 			Deshabilitar();
@@ -593,7 +611,7 @@ function CallService($miProyecto,$filtro){
 					console.log(txt);
 					var data = JSON.parse(txt);
 					ext = data.length;
-					var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
+					var tabla = cabeceraTabla + '<div class="ex1">' + '<div class="ex1">' + '<table  id="tabla" class="table table-bordered table-striped">';
 					tabla = tabla + '<thead><tr style="background:#ffffff;"><td>MATRICULA</td><td>APELLIDOS Y NOMBRES</td><td>UNIDAD FUNCIONAL</td>';
 					tabla = tabla + '<td>F. INGRESO</td><td>F. CESE</td><td>AREA</td>';
 					tabla = tabla + '<td>COD. FUNCION</td><td>FUNCION</td><td>F. INICIO</td><td>F. FIN</td></tr></thead>';
@@ -658,7 +676,7 @@ function CallService($miProyecto,$filtro){
 						tabla = tabla+'<td>'+pickerf+'</td></tr>';
 						
 					}
-					tabla = tabla+'</tbody></table></div>';
+					tabla = tabla+'</tbody></table></div></div>';
 					$tablaEmpleado = tabla;
 					document.getElementById("dataInicial").innerHTML = tabla;
 					
@@ -672,6 +690,37 @@ function CallService($miProyecto,$filtro){
 			}
 		   
 	}
+
+function Filtrado(){
+	
+	var aa = $("#buscar").val();
+
+	Filtrar("#tabla", aa);
+    
+}
+	
+    
+function Filtrar(id, value){
+        var rows = document.querySelectorAll(id + ' tbody tr');
+        
+        for(var i = 0; i < rows.length; i++){
+            var showRow = false;
+            
+            var row = rows[i];
+            row.style.display = 'none';
+            
+            for(var x = 0; x < row.childElementCount; x++){
+                if(row.children[x].textContent.toLowerCase().indexOf(value.toLowerCase().trim()) > -1){
+                    showRow = true;
+                    break;
+                }
+            }
+            
+            if(showRow){
+                row.style.display = null;
+            }
+        }
+    }
 
 
 function AreaSelectVal($codArea){
@@ -730,11 +779,13 @@ function GuardaPerfil(){
 	var pcodigo = document.getElementById("pcodigo").value;
 	var pnombre = document.getElementById("pnombre").value;
 	var pestado = document.getElementById("estadop").value;
-	var paccion = document.getElementById("AccionSelectVal").value;
-	
+	//var paccion = document.getElementById("AccionSelectVal").value;
+	/*var paccion=document.getElementsByName("aacc")[0].checked;
+	console.log(paccion);*/
+	var paccion = listaAcciones;
 
 	if(pcodigo!="" && pnombre!="" && pestado!=""){
-		socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado, accion: paccion2});
+		socket.emit("GuardaPerfil",{codigo:pcodigo, descripcion:pnombre, estado:pestado, accion: paccion});
 		Perfil();
 
 	} else {
@@ -1103,6 +1154,7 @@ function DeleteFuncion(a){
 
 
 function EditPerfil(a){
+	console.log("editperfil",a);
 	$("#cuerpoPerfil").hide();
 	$("#cabeceraPerfil").hide();
 	$("#cuerpoPerfil2").show();
@@ -1110,10 +1162,15 @@ function EditPerfil(a){
 	var lPerfil = listaPerfil.split("#");
 	var lnomPerfil = listaNomPerfil.split("#");
 	
-	//socket.emit("BuscaAcciones",{rol:a});
-	document.getElementById("pcodigo2").value = lPerfil[a];
-	document.getElementById("pnombre2").value = lnomPerfil[a];
-	document.getElementById("select_acciones").innerHTML = $accionesSelect;
+	socket.emit("BuscaAcciones",{rol:a});
+	for(var m=0; m<lPerfil.length; m++){
+		if(lPerfil[m]==a){
+			document.getElementById("pcodigo2").value = lPerfil[m];
+			document.getElementById("pnombre2").value = lnomPerfil[m];
+		}
+	}
+	
+	//document.getElementById("select_acciones").innerHTML = $accionesSelect;
 }
 
 function EditPerfil2(a){
@@ -1121,7 +1178,7 @@ function EditPerfil2(a){
 	$("#cuerpoPerfil").show();
 	$("#cabeceraPerfil").show();
 	var paccion = document.getElementById("AccionSelectVal").value;
-	console.log(paccion);
+	console.log('paccion'.paccion);
 	var paccion2 = '';
 	if(paccion!="0"){
 		console.log(paccion);

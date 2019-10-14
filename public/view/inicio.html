@@ -108,7 +108,11 @@
 		}
 		
 	</script>
-
+	<style>
+		div.ex1 {
+			overflow: scroll;
+		}
+	</style>
 </head>
 
 <body>
@@ -591,9 +595,370 @@
 						<center><img src="../view/gif.gif"></center>
 					</div>
 					
-					<div id="contenidos" style="margin-left: 5%; align-content: center; width:100%; justify-items: center;">
+					<div id="contenidos" style="align-content: center; width:100%; justify-items: center;">
 						<div id="campoMensaje" style="align-content: center; width:100%; justify-items: center;">
 							<center>
+									<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">Configuration option</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+														<a class="list-icons-item" data-action="collapse"></a>
+														<a class="list-icons-item" data-action="reload"></a>
+														<a class="list-icons-item" data-action="remove"></a>
+													</div>
+												</div>
+											</div>
+						
+											<div class="card-body">
+												The <code>Responsive</code> extension for DataTables can be applied to a DataTable in one of two ways; with a specific <code>class name</code> on the table, or using the DataTables initialisation options. This method shows the latter, with the <code>responsive</code> option being set to the boolean value <code>true</code>. The <code>responsive</code> option can be given as a boolean value, or as an object with configuration options.
+											</div>
+									<table class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>First Name</th>
+													<th>Last Name</th>
+													<th>Job Title</th>
+													<th>DOB</th>
+													<th>Status</th>
+													<th class="text-center">Actions</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Marth</td>
+													<td><a href="#">Enright</a></td>
+													<td>Traffic Court Referee</td>
+													<td>22 Jun 1972</td>
+													<td><span class="badge badge-success">Active</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Jackelyn</td>
+													<td>Weible</td>
+													<td><a href="#">Airline Transport Pilot</a></td>
+													<td>3 Oct 1981</td>
+													<td><span class="badge badge-secondary">Inactive</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Aura</td>
+													<td>Hard</td>
+													<td>Business Services Sales Representative</td>
+													<td>19 Apr 1969</td>
+													<td><span class="badge badge-danger">Suspended</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Nathalie</td>
+													<td><a href="#">Pretty</a></td>
+													<td>Drywall Stripper</td>
+													<td>13 Dec 1977</td>
+													<td><span class="badge badge-info">Pending</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Sharan</td>
+													<td>Leland</td>
+													<td>Aviation Tactical Readiness Officer</td>
+													<td>30 Dec 1991</td>
+													<td><span class="badge badge-secondary">Inactive</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Maxine</td>
+													<td><a href="#">Woldt</a></td>
+													<td><a href="#">Business Services Sales Representative</a></td>
+													<td>17 Oct 1987</td>
+													<td><span class="badge badge-info">Pending</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Sylvia</td>
+													<td><a href="#">Mcgaughy</a></td>
+													<td>Hemodialysis Technician</td>
+													<td>11 Nov 1983</td>
+													<td><span class="badge badge-danger">Suspended</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Lizzee</td>
+													<td><a href="#">Goodlow</a></td>
+													<td>Technical Services Librarian</td>
+													<td>1 Nov 1961</td>
+													<td><span class="badge badge-danger">Suspended</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Kennedy</td>
+													<td>Haley</td>
+													<td>Senior Marketing Designer</td>
+													<td>18 Dec 1960</td>
+													<td><span class="badge badge-success">Active</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Chantal</td>
+													<td><a href="#">Nailor</a></td>
+													<td>Technical Services Librarian</td>
+													<td>10 Jan 1980</td>
+													<td><span class="badge badge-secondary">Inactive</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Delma</td>
+													<td>Bonds</td>
+													<td>Lead Brand Manager</td>
+													<td>21 Dec 1968</td>
+													<td><span class="badge badge-info">Pending</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Roland</td>
+													<td>Salmos</td>
+													<td><a href="#">Senior Program Developer</a></td>
+													<td>5 Jun 1986</td>
+													<td><span class="badge badge-secondary">Inactive</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Coy</td>
+													<td>Wollard</td>
+													<td>Customer Service Operator</td>
+													<td>12 Oct 1982</td>
+													<td><span class="badge badge-success">Active</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Maxwell</td>
+													<td>Maben</td>
+													<td>Regional Representative</td>
+													<td>25 Feb 1988</td>
+													<td><span class="badge badge-danger">Suspended</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Cicely</td>
+													<td>Sigler</td>
+													<td><a href="#">Senior Research Officer</a></td>
+													<td>15 Mar 1960</td>
+													<td><span class="badge badge-info">Pending</span></td>
+													<td class="text-center">
+														<div class="list-icons">
+															<div class="dropdown">
+																<a href="#" class="list-icons-item" data-toggle="dropdown">
+																	<i class="icon-menu9"></i>
+																</a>
+					
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>
+																	<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								
 							<div id="selectPeriodo"></div>
 							<!--<select id="periodo" style="margin-top: 50px"><option value="201909">Setiembre 2019</option></select>-->
 							<br><br>
@@ -604,7 +969,7 @@
 						</div>
 						
 						<div id="campoEmpleado" style="align-content: center; width:100%; justify-items: center;">
-							<div id="botones" style="margin-left:60%; margin-bottom: 2%; width: 100%;">
+							<div id="botones" style="margin-bottom: 2%; width: 100%;">
 								<button id="ibotonAgregar" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_empleado">AGREGAR USUARIO</button>
 								<button id="ibotonGuardar" onclick="GuardarEmpl()" type="button" class="btn btn-danger" data-toggle="button">GUARDAR</button>
 							</div>
@@ -756,6 +1121,7 @@
 												</td>
 											</tr>
 										</table>
+									
 										<!--<div class="card">
 												<div class="card-header header-elements-inline">
 													<h6 class="card-title">Hierarchical select</h6>
@@ -974,7 +1340,33 @@
 									</div>
 								</div>
 								<br>
-								<h6 class="font-weight-semibold">RESTAURAR</h6>
+								<h6 class="font-weight-semibold">ACCIONES</h6>
+								
+									<li class="folder"><a onclick="PAccion()" class="list-icons-item" data-action="collapse"></a>
+										<input type="checkbox" onclick="TotalAccion()" checked> Lista Acciones
+										<div id="ppaccion">
+											<ul>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(1)" value="1" >Ingreso </li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(2)" value="2" >Ingreso al proyecto</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(3)" value="3" >Carga de empleados</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(4)" value="4" >Agregar empleados</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(5)" value="5" >Modificar empleado</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(6)" value="6" >Ver incidencias</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(7)" value="7" >Autollenar incidencias</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(8)" value="8" >Guardar incidencias</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(9)" value="9" >Ver areas</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(10)" value="10" >Crear areas</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(11)" value="11" >Modificar areas</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(12)" value="12" >Inhabilitar areas</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(13)" value="13" >Ver cargo</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(14)" value="14" >Crear cargo</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(15)" value="15" >Modificar cargo</li>
+												<li><input type="checkbox" name="aacc" onclick="VarAccion(16)" value="16" >Inhabilitar cargo</li>
+											</ul>
+										</div>
+									</li>
+
+								
 								<div class="form-group row">
 									<div style="justify-content: center; align-items: center;">
 										<div id="perfilEliminada"></div>
