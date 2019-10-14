@@ -20,8 +20,21 @@
 	<script src="../view/global_assets/js/main/jquery.min.js"></script>
 	<script src="../view/global_assets/js/main/bootstrap.bundle.min.js"></script>
 	<script src="../view/global_assets/js/plugins/loaders/blockui.min.js"></script>
+	<script src="../view/global_assets/js/plugins/ui/ripple.min.js"></script>
 	<!-- /core JS files -->
+	<!-- Theme JS files -->
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/core.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/effects.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/interactions.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/cookie.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/styling/switchery.min.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/styling/uniform.min.js"></script>
+	<script src="../view/global_assets/js/plugins/trees/fancytree_all.min.js"></script>
+	<script src="../view/global_assets/js/plugins/trees/fancytree_childcounter.js"></script>
 
+	
+	<script src="../view/global_assets/js/demo_pages/extra_trees.js"></script>
+	<!-- /theme JS files -->
 	<!-- Theme JS files -->
 	<script src="../view/assets/js/app.js"></script>
 	<script src="https://code.jquery.com/jquery.js"></script>
@@ -735,10 +748,33 @@
 													<label>ACCIONES: </label>
 												</td>
 												<td>
-													<div id="select_acciones"></div>
+														<div class="tree-checkbox-hierarchical card card-body border-left-danger border-left-2 shadow-0 rounded-left-0">
+																<ul class="mb-0">
+																	<div id="select_acciones"></div>
+																</ul>
+														</div>	
 												</td>
 											</tr>
 										</table>
+										<!--<div class="card">
+												<div class="card-header header-elements-inline">
+													<h6 class="card-title">Hierarchical select</h6>
+													<div class="header-elements">
+														<div class="list-icons">
+															<a class="list-icons-item" data-action="collapse"></a>
+															<a class="list-icons-item" data-action="reload"></a>
+															<a class="list-icons-item" data-action="remove"></a>
+														</div>
+													</div>
+												</div>
+												<div class="card-body">
+													<div class="tree-checkbox-hierarchical card card-body border-left-danger border-left-2 shadow-0 rounded-left-0">
+															<ul class="mb-0">
+																<div id="select_acciones"></div>
+															</ul>
+													</div>
+												</div>
+										</div>-->
 										<br><br>
 										<button id="ibotonEditarPerfil" onclick="EditPerfil2()" type="button" class="btn btn-danger">GUARDAR</button>
 									</div>

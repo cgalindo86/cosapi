@@ -5,9 +5,10 @@ var $areaSelect = "";
 var $funcionSelect = "";
 var $accionesSelect= "";
 var socket = io.connect();
-var $cont=0;
+var $cont=0, $contAc=0; $contAc2=0;
 var $tablaEmpleado = '';
 var $tablaIncidencia = '';
+var listaAcciones = '';
 var ext;
 var listaEmpleado='',listaArea='',listaNomArea='',listaFuncion='',listaNomFuncion='',
 	listaPerfil='',listaNomPerfil='',listaOpciones='',listaNomOpciones='';
@@ -70,13 +71,15 @@ function init(){
 		});
 
 		socket.on("recibeAccion",function(data){
-			console.log("acciones "+data);
+			//console.log("acciones "+data);
 			$accionesSelect = data;
+			$("#ppaccion").hide();
+			listaAcciones = '';
 		});
 
 		socket.on("recibeArea",function(data){
 			$areaSelect = data;
-			console.log("opt area "+$areaSelect);
+			//console.log("opt area "+$areaSelect);
 		});
 
 		socket.on("recibeArea2",function(data){
@@ -108,7 +111,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			console.log("area 2"+tabla);
 			document.getElementById("cuerpoArea").innerHTML = tabla;
 		});
@@ -161,7 +164,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			document.getElementById("cuerpoFuncion").innerHTML = tabla;
 		});
 
@@ -212,7 +215,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			document.getElementById("cuerpoPerfil").innerHTML = tabla;
 		});
 
@@ -245,7 +248,7 @@ function init(){
 				tabla = tabla+'<td>'+acciones+'</td>';
 				tabla = tabla+'</tr>';
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			document.getElementById("cuerpoOpciones").innerHTML = tabla;
 		});
 		
@@ -286,7 +289,7 @@ function init(){
 				tabla = tabla+'<td>'+d2[4]+'</td>';
 				tabla = tabla+'<td><button onclick="Seleccionar('+d2[0]+')">SELECCIONAR</button></td></tr>';
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			document.getElementById("rbusqueda").innerHTML = tabla;
 		});
 
@@ -357,7 +360,7 @@ function init(){
 				*/
 				//FuncionNombre
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			$tablaEmpleado = tabla;
 			document.getElementById("dataInicial").innerHTML = tabla;
 		});
@@ -378,11 +381,11 @@ function init(){
 			ext = codigox.length;
 			
 			var tabla = '<div class="table-responsive"><table class="table table-bordered table-striped">';
-			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>CODIGO</td><td>APELLIDOS Y NOMBRES</td>';
-			tabla = tabla + '<td>F. INICIO</td><td>F. FIN</td><td>'+anio+'-01</td>';
-			tabla = tabla + '<td>'+anio+'-02</td><td>'+anio+'-03</td><td>'+anio+'-04</td><td>'+anio+'-05</td>';
-			tabla = tabla + '<td>'+anio+'-06</td><td>'+anio+'-07</td><td>'+anio+'-08</td><td>'+anio+'-09</td>';
-			tabla = tabla + '<td>'+anio+'-10</td><td>'+anio+'-11</td><td>'+anio+'-12</td></tr></thead>';
+			tabla = tabla + '<thead><tr style="background:#ffffff;"><th>CODIGO</th><td>APELLIDOS Y NOMBRES</th>';
+			tabla = tabla + '<th>F. INICIO</th><td>F. FIN</th><th>'+anio+'-01</th>';
+			tabla = tabla + '<th>'+anio+'-02</th><th>'+anio+'-03</th><th>'+anio+'-04</th><th>'+anio+'-05</th>';
+			tabla = tabla + '<th>'+anio+'-06</th><th>'+anio+'-07</th><th>'+anio+'-08</th><th>'+anio+'-09</th>';
+			tabla = tabla + '<th>'+anio+'-10</th><th>'+anio+'-11</th><th>'+anio+'-12</th></tr></thead>';
 			tabla = tabla+'<tbody>';
 			
 			var mdata = data.incidencia_prevista;
@@ -477,7 +480,7 @@ function init(){
 				}
 
 			}
-			tabla = tabla+'</tbody></table>';
+			tabla = tabla+'</tbody></table></div>';
 			$tablaIncidencia = tabla;
 			document.getElementById("cuerpoIncidencias").innerHTML = tabla;
 			Deshabilitar();
@@ -562,9 +565,9 @@ function Buscar(){
 
 
 function CallService($miProyecto,$filtro){
-		console.log("proy "+$miProyecto);
-		$("#mgif").show();
-		
+			console.log("proy "+$miProyecto + " periodo "+aniomes);
+			$("#mgif").show();
+			
 			var input = {
 
 				"DocumentoNumero":"",
@@ -596,6 +599,7 @@ function CallService($miProyecto,$filtro){
 					tabla = tabla + '<td>COD. FUNCION</td><td>FUNCION</td><td>F. INICIO</td><td>F. FIN</td></tr></thead>';
 					tabla = tabla+'<tbody>';
 					for(i=0; i<ext; i++){
+						console.log("empleado",data[i]["EmpleadoCodigo"]);
 						listaEmpleado = listaEmpleado + data[i]["EmpleadoCodigo"] + "#";
 						socket.emit("GuardaEmpleadoProyecto",{
 							
@@ -654,7 +658,7 @@ function CallService($miProyecto,$filtro){
 						tabla = tabla+'<td>'+pickerf+'</td></tr>';
 						
 					}
-					tabla = tabla+'</tbody></table>';
+					tabla = tabla+'</tbody></table></div>';
 					$tablaEmpleado = tabla;
 					document.getElementById("dataInicial").innerHTML = tabla;
 					
@@ -662,10 +666,10 @@ function CallService($miProyecto,$filtro){
 			});
 			
 			$("#mgif").hide();
-
-		if($filtro=="inicial"){
-			alert("DATOS CARGADOS CORRECTAMENTE");
-		}
+		
+			if($filtro=="inicial"){
+				//alert("DATOS CARGADOS CORRECTAMENTE");
+			}
 		   
 	}
 
@@ -875,11 +879,14 @@ function Autollenado(){
 
 function Cargar(){
 	console.log("tablaEm",$tablaEmpleado);
+
+	CallService($miProyecto,"inicial");
+	/*
 	if($tablaEmpleado==""){
 		CallService($miProyecto,"inicial");
 	} else {
 		document.getElementById("dataInicial").innerHTML = $tablaEmpleado;
-	}
+	}*/
 }
 
 function Proyectos(){
@@ -896,6 +903,7 @@ function Empleados(){
 	
 	$("#botones").show();
 	$("#campoEmpleado").show();
+	
 	if($tablaEmpleado==""){
 		socket.emit("EmpleadoProyecto",{proyecto:$miProyecto});
 		//CallService($miProyecto,"bempleado");
@@ -1102,6 +1110,7 @@ function EditPerfil(a){
 	var lPerfil = listaPerfil.split("#");
 	var lnomPerfil = listaNomPerfil.split("#");
 	
+	//socket.emit("BuscaAcciones",{rol:a});
 	document.getElementById("pcodigo2").value = lPerfil[a];
 	document.getElementById("pnombre2").value = lnomPerfil[a];
 	document.getElementById("select_acciones").innerHTML = $accionesSelect;
@@ -1203,4 +1212,35 @@ function valCod($filtro){
 		socket.emit("ValidaCodigoOpcion",{opcion:$val});
 		
 	} 
+}
+
+function PAccion(){
+	$contAc++;
+	if($contAc % 2==0){
+		$("#ppaccion").hide();
+	} else {
+		$("#ppaccion").show();
+	}
+}
+
+function TotalAccion(){
+	$contAc2++;
+	if($contAc2 % 2==0){
+		$( "input[type='checkbox']" ).prop( "checked", true);
+	} else {
+		$( "input[type='checkbox']" ).prop( "checked", false);
+	}
+	
+}
+
+function VarAccion($dat){
+
+	if(listaAcciones.includes($dat)){
+		listaAcciones = listaAcciones.replace($dat+"#",""); 
+	} else {
+		listaAcciones = listaAcciones + $dat + "#"; 
+	}
+
+	console.log(listaAcciones);
+	 
 }

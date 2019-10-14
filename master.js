@@ -19,8 +19,10 @@ function Valida(data){
 
 	  var ActiveDirectory = require('activedirectory');
 		var config = {
-			url: 'ldap://cosapi.local:389' //,
-			//baseDN: 'cosapi=local'
+			url: 'ldap://cosapi.local:389',
+			baseDN: 'dc=cosapi,dc=local',
+			username: 'pruebaco2@cosapi.com.pe',
+			password: 'Cosapi2019'
 		};
 		var ad = new ActiveDirectory(config);
 		var username = data.usuario;
@@ -28,7 +30,7 @@ function Valida(data){
 		//var username = 'pruebaco2@cosapi.com.pe';
 		//var password = 'Cosapi2019';
 		// Authenticate
-		ad.authenticate(username, password, function(err, auth) {
+		/*ad.authenticate(username, password, function(err, auth) {
 			if (err) {
 				console.log('iERROR: ' + JSON.stringify(err));
 				return;
@@ -40,17 +42,38 @@ function Valida(data){
 			} else {
 				console.log('Authentication failed!');
 			}
-		});
+		});*/
+		console.log("valida");
 
 		/*ad.userExists(username, function(err, exists) {
 			if (err) {
 			  console.log('iiERROR: ' +JSON.stringify(err));
 			  return;
+			} else {
+				console.log(username + ' exists: ' + exists);
 			}
 		  
-			console.log(username + ' exists: ' + exists);
-		  });
-		  */
+			
+		  });*/
+		  //var query = 'cn=*Mart*';
+ 
+		  //var ad = new ActiveDirectory(config);
+		  	var sAMAccountName = 'pruebaco2@cosapi.com.pe';
+			//var userPrincipalName = 'pruebaco2@cosapi.com.pe';
+			//var dn = 'CN=Luis, Yakon,OU=Users,DC=domain,DC=com';
+			
+			// Find user by a sAMAccountName
+			var ad = new ActiveDirectory(config);
+			ad.findUser(sAMAccountName, function(err, user) {
+			if (err) {
+				console.log('ERROR: ' +JSON.stringify(err));
+				return;
+			}
+			
+			if (! user) console.log('User: ' + sAMAccountName + ' not found.');
+			else console.log(JSON.stringify(user)+"2");
+			});
+		  
 }
 
 
@@ -72,7 +95,7 @@ app.get('/valida', function(req, res){
     var n="";
     fs.readFile(__dirname+'/public/view/lista.html', 'utf8', (error, datos) => {
         if (error) throw error;
-        console.log("El contenido es: ", nom.a[0]);
+        //console.log("El contenido es: ", nom.a[0]);
         
         datos = datos.replace("MIDD",nom.a[0]);
         res.send(datos);
@@ -84,7 +107,7 @@ app.get('/inicio', function(req, res){
     var n="";
     fs.readFile(__dirname+'/public/view/inicio.html', 'utf8', (error, datos) => {
         if (error) throw error;
-        console.log("El contenido es: ", nom.a[0]);
+        //console.log("El contenido es: ", nom.a[0]);
         
 		datos = datos.replace("MIDD",nom.a[0]);
 		datos = datos.replace("PROY",nom.a[1]);
@@ -195,6 +218,7 @@ io.sockets.on('connection', function(socket) {
 							
 							}
 						}
+						Valida(data);
 
 											
 					} else if(consulta=="3"){
@@ -220,7 +244,7 @@ io.sockets.on('connection', function(socket) {
 						}
 
 						if(respuesta!=""){
-							console.log("mi servicio 2");
+							//console.log("mi servicio 2");
 							io.sockets.emit('miServicio2', result);
 						} else {
 							console.log("conecta");
@@ -851,16 +875,37 @@ io.sockets.on('connection', function(socket) {
 						result = await connection.execute(sql);
 						var a;
 						var reg=0;
-						var respuesta='<select id="AccionSelectVal"><option value="0">Seleccionar</option>';
-                            
+						//var respuesta='<select id="AccionSelectVal"><option value="0">Seleccionar</option>';
+						var respuesta = '<li class="folder"><a onclick="PAccion()" class="list-icons-item" data-action="collapse"></a>';
+						respuesta = respuesta + '<input type="checkbox" onclick="TotalAccion()" checked> Lista Acciones';
+						respuesta = respuesta + '<div id="ppaccion"><ul>';
+						
+						
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
-							respuesta = respuesta + '<option value="'+json[0]+'">'+json[1] + "</option>";
-								
+							
+							var cnd='';
+							var ncont = a+1;
+							var sql2 = "SELECT * FROM ACCION_ROL WHERE ACCION = '"+ncont+"'  AND ROL = '1' ";
+							result2 = await connection.execute(sql2);
+							var a2;
+							for(a2=0; a2<result2.rows.length; a2++){
+								var string2=JSON.stringify(result2.rows[a2]);
+								var json2 =  JSON.parse(string2);
+								cnd = json2[0]+"";
+							}
+
+							if(cnd!=""){
+								respuesta = respuesta + '<li><input type="checkbox" name="aacc" onclick="VarAccion('+json[0]+')" value="'+json[0]+'" checked>'+json[1]+'</li>';	
+							
+							} else{
+								respuesta = respuesta + '<li><input type="checkbox" name="aacc" onclick="VarAccion('+json[0]+')" value="'+json[0]+'" >'+json[1]+'</li>';	
+							
+							}
 							reg++;
 						}
-
+						respuesta = respuesta + '</ul></div></li>';
 						io.sockets.emit("recibeAccion",respuesta);
 						
 					} else if(consulta=="27"){
