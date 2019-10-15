@@ -324,7 +324,7 @@ io.sockets.on('connection', function(socket) {
 												
 					}  else if(consulta=="5"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO='"+data.empleado+"' AND PROYECTO='"+data.proyecto+"'" ;
+						var sql = "SELECT * FROM EMPLEADO WHERE EMPLEADO='"+data.empleado+"'  " ;
 						
 						console.log("SQL empleado",sql);
 						
@@ -354,7 +354,25 @@ io.sockets.on('connection', function(socket) {
 									data.cargo, data.area, data.fechaIngreso, data.fechaCese, data.provisiones, 
 									data.sueldo, data.costo, data.estado, data.proyecto, data.area_r, data.cargo_r],{ autoCommit: true});
 							console.log("Rows inserted: " + result.rowsAffected);
-							//var result3;		
+							
+						}
+						
+						var respuesta=""; 
+						var sql = "SELECT * FROM EMPLEADO_PROYECTO WHERE EMPLEADO='"+data.empleado+"' AND PROYECTO='"+data.proyecto+"'" ;
+						
+						console.log("SQL empleado",sql);
+						
+						result = await connection.execute(sql);
+						var a;
+						respuesta = "";
+						for(a=0; a<result.rows.length; a++){
+							var string=JSON.stringify(result.rows[a]);
+							var json =  JSON.parse(string);
+							respuesta = json[0]+"";
+						}
+						console.log("respuesta","#"+respuesta+"#");
+						if(respuesta==""){
+							//var result;
 							result = await connection.execute(
 								`INSERT INTO EMPLEADO_PROYECTO (EMPLEADO,PROYECTO) 
 								VALUES (:EMPLEADO, :PROYECTO)`,
@@ -520,15 +538,39 @@ io.sockets.on('connection', function(socket) {
 
 					} else if(consulta=="10"){
 						var respuesta=""; 
-						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
+						
+						var sql = "SELECT * FROM EMPLEADO_PROYECTO WHERE PROYECTO = '"+data.proyecto+"'";
 						result = await connection.execute(sql);
 						var a;
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
+							var nn = json[0];
+
+							var sql2 = "SELECT * FROM EMPLEADO WHERE EMPLEADO = '"+nn+"'";
+							var result2 = await connection.execute(sql2);
+							var b;
+							for(b=0; b<result2.rows.length; b++){
+								var string2 = JSON.stringify(result2.rows[b]);
+								var json =  JSON.parse(string2);
+								respuesta = respuesta + json[0]+"#"+json[1]+"#"+json[2]+"#";
+								respuesta = respuesta + json[3]+"#"+json[4]+"#"+json[5]+"#";
+								respuesta = respuesta + json[6]+"#"+json[7]+"#"+json[8]+"#";
+								respuesta = respuesta + json[9]+"#"+json[10]+"#"+json[11]+"#";
+								respuesta = respuesta + json[12]+"#"+json[13]+"#"+json[14]+"#";
+								respuesta = respuesta + json[15]+"#"+json[16]+"#"+json[17]+"#";
+								respuesta = respuesta + json[18]+"#"+json[19]+"#"+json[20]+"#";
+								respuesta = respuesta + json[21]+"#"+json[22]+"#"+json[23]+"#";
+								respuesta = respuesta + json[24]+"#"+json[25]+"#"+json[26]+"#";
+								
+							}
+
+							respuesta = respuesta + "%";
 						}
+						
+						
 						//console.log("reEmp",result);
-						io.sockets.emit("ResultadoEmpleadoProyecto",result);
+						io.sockets.emit("ResultadoEmpleadoProyecto",respuesta);
 						
 					} else if(consulta=="11"){
 						var respuesta=""; 
@@ -539,100 +581,158 @@ io.sockets.on('connection', function(socket) {
 						var fecha_inicio="";
 						var fecha_fin="";
 
-						var sql = "SELECT * FROM EMPLEADO WHERE PROYECTO = '"+data.proyecto+"'";
+						
+						var sql = "SELECT * FROM EMPLEADO_PROYECTO WHERE PROYECTO = '"+data.proyecto+"' ";
+						console.log("sql",sql);
 						result = await connection.execute(sql);
+						var a;
 						var limite = result.rows.length;
+
 						var c=0;
-						console.log("antes for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+
 						for(a=0; a<result.rows.length; a++){
 							var string=JSON.stringify(result.rows[a]);
 							var json =  JSON.parse(string);
-							console.log("dentro for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
-							if(json[0]!=null && json[0]!=undefined && json[0]!=NaN){
-								empleado = empleado + json[0]+"#";
-								
-							} else {
-								fecha_inicio = fecha_inicio + " " +"#";
-							}
-
-							if(json[3]!=null && json[3]!=undefined && json[3]!=NaN){
-								nnombre = nnombre + json[3] + " " + json[4]+"#";
-							} else {
-								nnombre = nnombre + json[3] + " " + json[4]+"#";
-							}
-							
-							if(json[21]!=null && json[21]!=undefined){
-								fecha_inicio = fecha_inicio + json[21]+"#";
-								
-							} else {
-								fecha_inicio = fecha_inicio + " " +"#";
-							}
-
-							if(json[22]!=null && json[22]!=undefined){
-								fecha_fin = fecha_fin + json[22]+"#";
-							} else {
-								fecha_fin = fecha_fin + " " +"#";
-								
-							}
-							
-
-							console.log("luego val",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
-
-							//var respuesta=""; 
-							var sql2 = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' AND EMPLEADO = '"+json[0]+"'";
-							result2 = await connection.execute(sql2);
-							var b;
-							for(b=0; b<result2.rows.length; b++){
-								var string2=JSON.stringify(result2.rows[b]);
-								var json2 =  JSON.parse(string2);
-
-								if(json2[3]!=null && json2[3]!=undefined){
-									data2 = data2 + json2[3]+"#";
-								} else {
-									data2 = data2 + " " +"#";	
-								}
-
-								if(json2[4]!=null && json2[4]!=undefined){
-									data3 = data3 + json2[4]+"#";
-								} else {
-									data3 = data3 + " " +"#";	
-								}
-								
-							}
-
-							data2 = data2+"%";
-							data3 = data3+"%";
+							var nn = json[0];
 							c++;
-							//console.log("c - tam json",c + " - " +limite);
-							if(c==limite){
-								//console.log("d2"+data2);
-								//console.log("d3"+data3);
-								io.sockets.emit("ResultadoIncidenciaProyecto",{
-									empleado: empleado,
-									nombre: nnombre,
-									fechaInicio: fecha_inicio,
-									fechaFin: fecha_fin,
-									incidencia_prevista: data2,
-									incidencia_real: data3
-								});
+							var sql2 = "SELECT * FROM EMPLEADO WHERE EMPLEADO = '"+nn+"'";
+							console.log("sql2",sql2);
+							result2 = await connection.execute(sql2);
+							//var limite = result2.rows.length;
+							//var c=0;
+							console.log("antes for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+							for(a2=0; a2<result2.rows.length; a2++){
+								var string2=JSON.stringify(result2.rows[a2]);
+								var jsoni =  JSON.parse(string2);
+								console.log("dentro for",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+								if(jsoni[0]!=null && jsoni[0]!=undefined && jsoni[0]!=NaN){
+									empleado = empleado + jsoni[0]+"#";
+									
+								} else {
+									fecha_inicio = fecha_inicio + " " +"#";
+								}
+
+								if(jsoni[3]!=null && jsoni[3]!=undefined && jsoni[3]!=NaN){
+									nnombre = nnombre + jsoni[3] + " " + jsoni[4]+"#";
+								} else {
+									nnombre = nnombre + jsoni[3] + " " + jsoni[4]+"#";
+								}
+								
+								if(jsoni[21]!=null && jsoni[21]!=undefined){
+									fecha_inicio = fecha_inicio + jsoni[21]+"#";
+									
+								} else {
+									fecha_inicio = fecha_inicio + " " +"#";
+								}
+
+								if(jsoni[22]!=null && jsoni[22]!=undefined){
+									fecha_fin = fecha_fin + jsoni[22]+"#";
+								} else {
+									fecha_fin = fecha_fin + " " +"#";
+									
+								}
+								
+
+								console.log("luego val",empleado+" "+nnombre+" "+fecha_inicio+" "+fecha_fin);
+
+								//var respuesta=""; 
+								var sql3 = "SELECT * FROM INCIDENCIA WHERE PROYECTO = '"+data.proyecto+"' AND EMPLEADO = '"+nn+"'";
+								console.log("sql3",sql3);
+								result3 = await connection.execute(sql3);
+								console.log("e",result3.rows.length);
+								var b;
+								for(b=0; b<result3.rows.length; b++){
+									var string3=JSON.stringify(result3.rows[b]);
+									var json2 =  JSON.parse(string3);
+
+									if(json2[3]!=null && json2[3]!=undefined){
+										data2 = data2 + json2[3]+"#";
+									} else {
+										data2 = data2 + " " +"#";	
+									}
+
+									if(json2[4]!=null && json2[4]!=undefined){
+										data3 = data3 + json2[4]+"#";
+									} else {
+										data3 = data3 + " " +"#";	
+									}
+									console.log(json2[2]+" - "+json2[3]+" - "+json2[4]);
+								}
+
+								data2 = data2+"%";
+								data3 = data3+"%";
+								
+								console.log("c - tam json",c + " - " +limite);
+								if(c==limite){
+									console.log("d2"+data2);
+									console.log("d3"+data3);
+									io.sockets.emit("ResultadoIncidenciaProyecto",{
+										empleado: empleado,
+										nombre: nnombre,
+										fechaInicio: fecha_inicio,
+										fechaFin: fecha_fin,
+										incidencia_prevista: data2,
+										incidencia_real: data3
+									});
+								}
+								
 							}
-						}
 						
+						}
+
 					} else if(consulta=="12"){
-						var respuesta=""; 
-						result = await connection.execute(
-							`UPDATE INCIDENCIA SET INCIDENCIA_PREVISTA = :INCIDENCIA_PREVISTA
-							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO AND PERIODO = :PERIODO`,
-							[data.incidencia,data.empleado,data.proyecto,data.periodo],
-							{ autoCommit: true });  
-						console.log("Rows updated: " + result.rowsAffected); 
+						//costo = parseFloat()
+						var sql2 = "SELECT * FROM EMPLEADO WHERE EMPLEADO = '"+data.empleado+"'";
+						result2 = await connection.execute(sql2);
+						var b; 
+						var costo;
+
+						for(b=0; b<result2.rows.length; b++){
+							var string3=JSON.stringify(result2.rows[b]);
+							var json2 =  JSON.parse(string3);
+							var sueldo = json2[10];
+
+							if(data.incidencia==""){
+								costo = parseInt(sueldo)*parseInt("0")+"";
+							} else {
+								costo = parseInt(sueldo)*parseInt(data.incidencia)+"";
+							}
+
+							result = await connection.execute(
+								`UPDATE INCIDENCIA SET INCIDENCIA_PREVISTA = :INCIDENCIA_PREVISTA,
+								COSTO_REAL = :COSTO_REAL
+								WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO AND PERIODO = :PERIODO`,
+								[data.incidencia,costo,data.empleado,data.proyecto,data.periodo],
+								{ autoCommit: true });  
+							console.log("Rows updated: " + result.rowsAffected+" - "+data.periodo);
+							 
+						}
+
+						
+						
 						
 					} else if(consulta=="13"){
+						var sql2 = "SELECT * FROM EMPLEADO WHERE EMPLEADO = '"+data.empleado+"'";
+						result2 = await connection.execute(sql2);
+						var b,sueldo;
+						for(b=0; b<result2.rows.length; b++){
+							var string3=JSON.stringify(result2.rows[b]);
+							var json2 =  JSON.parse(string3);
+							sueldo = json2[10];
+						}
+						if(data.incidencia==""){
+							costo = parseInt(sueldo)*parseInt("0")+"";
+						} else {
+							costo = parseInt(sueldo)*parseInt(data.incidencia)+"";
+						}
+						//costo = parseFloat(sueldo)*parseFloat(data.incidencia);
+
 						var respuesta=""; 
 						result = await connection.execute(
-							`UPDATE INCIDENCIA SET INCIDENCIA_REAL = :INCIDENCIA_PREVISTA
+							`UPDATE INCIDENCIA SET INCIDENCIA_REAL = :INCIDENCIA_PREVISTA,
+							COSTO_REAL = :COSTO_REAL
 							WHERE EMPLEADO = :EMPLEADO AND PROYECTO = :PROYECTO AND PERIODO = :PERIODO`,
-							[data.incidencia,data.empleado,data.proyecto,data.periodo],
+							[data.incidencia,costo,data.empleado,data.proyecto,data.periodo],
 							{ autoCommit: true });  
 						console.log("Rows updated: " + result.rowsAffected); 
 						

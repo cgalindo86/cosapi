@@ -312,16 +312,19 @@ function init(){
 		});
 
 		socket.on("ResultadoEmpleadoProyecto",function(data){
-			ext = data.rows.length;
+			//ext = data.rows.length;
 			
 			var tabla = cabeceraTabla  + '<div class="ex1">' + '<table  id="tabla" class="table table-bordered table-striped">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>MATRICULA</td><td>APELLIDOS Y NOMBRES</td><td>UNIDAD FUNCIONAL</td>';
 			tabla = tabla + '<td>F. INGRESO</td><td>F. CESE</td><td>AREA</td><td>AREA COSTOS</td>';
 			tabla = tabla + '<td>FUNCION</td><td>FUNCION COSTOS</td><td>F. INICIO</td><td>F. FIN</td></tr></thead>';
 			tabla = tabla+'<tbody>';
-			for(i=0; i<ext; i++){
-				var string=JSON.stringify(data.rows[i]);
-				var json =  JSON.parse(string);
+			var ini = data.split("%");
+			ext = ini.length;
+			for(i=0; i<ext-1; i++){
+				//var string=JSON.stringify(data.rows[i]);
+				//var json =  JSON.parse(string);
+				var json = ini[i].split("#");
 				listaEmpleado = listaEmpleado + json[0] + "#";
 				
 				var pickeri = '<div class="form-group">';
@@ -417,8 +420,8 @@ function init(){
 			for(i=0; i<ext-1; i++){
 				listaEmpleado = listaEmpleado + codigox[i] + "#";
 				
-				var ldata = ndata[i].split("#");
-				var ldata2 = ndata2[i].split("#");
+				var ldata2 = ndata[i].split("#");
+				var ldata = ndata2[i].split("#");
 				//console.log("data"+i+": "+data[i]["AreaCodigo"]);
 				tabla = tabla+'<tr><td>'+codigox[i]+'</td>';
 				tabla = tabla+'<td>'+nombrex[i]+'</td>';
