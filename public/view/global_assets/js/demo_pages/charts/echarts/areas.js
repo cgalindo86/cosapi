@@ -94,7 +94,7 @@ var EchartsAreas = function() {
                 xAxis: [{
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                    data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                     axisLabel: {
                         color: '#333'
                     },
@@ -141,7 +141,7 @@ var EchartsAreas = function() {
                     {
                         name: 'Closed deals',
                         type: 'line',
-                        data: [10, 12, 21, 54, 260, 830, 710],
+                        data: [10, 12, 21, 54, 260, 830, 710, 21, 54, 260, 830, 710],
                         areaStyle: {
                             normal: {
                                 opacity: 0.25
@@ -170,7 +170,7 @@ var EchartsAreas = function() {
                                 opacity: 0.25
                             }
                         },
-                        data: [30, 182, 434, 791, 390, 30, 10]
+                        data: [30, 182, 434, 791, 390, 30, 10, 21, 54, 260, 830, 710]
                     },
                     {
                         name: 'New orders',
@@ -187,7 +187,7 @@ var EchartsAreas = function() {
                                 opacity: 0.25
                             }
                         },
-                        data: [1320, 1132, 601, 234, 120, 90, 20]
+                        data: [1320, 1132, 601, 234, 120, 90, 20, 21, 54, 260, 830, 710]
                     }
                 ]
             });

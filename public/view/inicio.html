@@ -34,6 +34,10 @@
 
 	
 	<script src="../view/global_assets/js/demo_pages/extra_trees.js"></script>
+	<script src="../view/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+
+	
+	<script src="../view/global_assets/js/demo_pages/charts/echarts/areas.js"></script>
 	<!-- /theme JS files -->
 	<!-- Theme JS files -->
 	<script src="../view/assets/js/app.js"></script>
@@ -621,6 +625,24 @@
 								<button id="ibotonAutollenado" onclick="Autollenado()" type="button" class="btn btn-danger" data-toggle="button">AUTOLLENADO</button>
 								<button id="ibotonGuardarIncidencia" onclick="GuardarIncidencia()" type="button" class="btn btn-danger" data-toggle="button">GUARDAR</button>
 							</div><br>
+							<div class="card">
+								<div class="card-header header-elements-inline">
+									<h5 class="card-title">Basic area</h5>
+									<div class="header-elements">
+										<div class="list-icons">
+											<a class="list-icons-item" data-action="collapse"></a>
+											<a class="list-icons-item" data-action="reload"></a>
+											<a class="list-icons-item" data-action="remove"></a>
+										</div>
+									</div>
+								</div>
+			
+								<div class="card-body">
+									<div class="chart-container">
+										<div class="chart has-fixed-height" id="area_basic"></div>
+									</div>
+								</div>
+							</div>
 							<div id="cuerpoIncidencias"></div>
 						</div>
 						<div id="campoArea">
