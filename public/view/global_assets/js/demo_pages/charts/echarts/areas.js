@@ -141,7 +141,7 @@ var EchartsAreas = function() {
                     {
                         name: 'Closed deals',
                         type: 'line',
-                        data: [10, 12, 21, 54, 260, 830, 710, 21, 54, 260, 830, 710],
+                        data: [10, 12, 210, 54, 260, 830, 710, 21, 54, 260, 830, 710],
                         areaStyle: {
                             normal: {
                                 opacity: 0.25

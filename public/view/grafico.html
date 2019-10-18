@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="../view/global_assets/css/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css">
+	<link href="../view/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="../view/assets/css/bootstrap_limitless.min.css" rel="stylesheet" type="text/css">
+	<link href="../view/assets/css/layout.min.css" rel="stylesheet" type="text/css">
+	<link href="../view/assets/css/components.min.css" rel="stylesheet" type="text/css">
+	<link href="../view/assets/css/colors.min.css" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script src="../view/global_assets/js/main/jquery.min.js"></script>
+	<script src="../view/global_assets/js/main/bootstrap.bundle.min.js"></script>
+	<script src="../view/global_assets/js/plugins/loaders/blockui.min.js"></script>
+	<script src="../view/global_assets/js/plugins/ui/ripple.min.js"></script>
+	<!-- /core JS files -->
+	<!-- Theme JS files -->
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/core.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/effects.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/jquery_ui/interactions.min.js"></script>
+	<script src="../view/global_assets/js/plugins/extensions/cookie.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/styling/switchery.min.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/styling/uniform.min.js"></script>
+	<script src="../view/global_assets/js/plugins/trees/fancytree_all.min.js"></script>
+	<script src="../view/global_assets/js/plugins/trees/fancytree_childcounter.js"></script>
+
+	
+	<script src="../view/global_assets/js/demo_pages/extra_trees.js"></script>
+	<script src="../view/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+
+	
+	<script src="../view/global_assets/js/demo_pages/charts/echarts/areas.js"></script>
+	<!--<script src="../view/global_assets/js/demo_pages/charts/echarts/bars_tornados.js"></script>-->
+	<!-- /theme JS files -->
+	<!-- Theme JS files -->
+	<script src="../view/assets/js/app.js"></script>
+	<script src="https://code.jquery.com/jquery.js"></script>
+
+	<!-- Theme JS files 
+	<script src="../view/global_assets/js/plugins/visualization/d3/d3.min.js"></script>
+	<script src="../view/global_assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/styling/switchery.min.js"></script>
+	<script src="../view/global_assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+	<script src="../view/global_assets/js/plugins/ui/moment/moment.min.js"></script>
+	<script src="../view/global_assets/js/plugins/pickers/daterangepicker.js"></script>
+
+	<script src="../view/assets/js/app.js"></script>
+	<script src="../view/global_assets/js/demo_pages/dashboard.js"></script>-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="application/javascript">
+        $(document).ready(function () {
+            
+            //document.getElementById("datepicker").disabled = false;
+            //document.getElementById("datepicker2").disabled = false;
+            
+            $("#date-popover").popover({html: true, trigger: "manual"});
+            $("#date-popover").hide();
+            $("#date-popover").click(function (e) {
+                $(this).hide();
+            });
+        
+            $("#my-calendar").zabuto_calendar({
+                action: function () {
+                    return myDateFunction(this.id, false);
+                },
+                action_nav: function () {
+                    return myNavFunction(this.id);
+                },
+                ajax: {
+                    url: "show_data.php?action=1",
+                    modal: true
+                },
+                legend: [
+                    {type: "text", label: "Special event", badge: "00"},
+                    {type: "block", label: "Regular event", }
+                ]
+            });
+        });
+        
+        
+        function myNavFunction(id) {
+            $("#date-popover").hide();
+            var nav = $("#" + id).data("navigation");
+            var to = $("#" + id).data("to");
+            console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+        }
+    </script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="application/javascript" src="../controler/inicio.js"></script>
+	
+	<script>
+        
+        /* ------------------------------------------------------------------------------
+ *
+ *  # Echarts - Bar and Tornado charts
+ *
+ *  Demo JS code for echarts_bars_tornados.html page
+ *
+ * ---------------------------------------------------------------------------- */
+
+
+// Setup module
+// ------------------------------
+
+var EchartsBarsTornados = function() {
+
+
+//
+// Setup module components
+//
+
+// Bar and tornado charts
+var _barsTornadosExamples = function() {
+    if (typeof echarts == 'undefined') {
+        console.warn('Warning - echarts.min.js is not loaded.');
+        return;
+    }
+
+    // Define elements
+    var bars_basic_element = document.getElementById('bars_basic');
+    var bars_stacked_element = document.getElementById('bars_stacked');
+    var bars_clustered_element = document.getElementById('bars_stacked_clustered');
+    var bars_float_element = document.getElementById('bars_float');
+    var bars_mix_element = document.getElementById('bars_mix');
+    var bars_tornado_negative_element = document.getElementById('bars_tornado_negative');
+    var bars_tornado_staggered_element = document.getElementById('bars_tornado_staggered');
+
+
+    // Mix bars and line
+    if (bars_mix_element) {
+
+        // Initialize chart
+        var bars_mix = echarts.init(bars_mix_element);
+
+
+        //
+        // Chart config
+        //
+
+        // Options
+        bars_mix.setOption({
+
+            // Global text styles
+            textStyle: {
+                fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                fontSize: 13
+            },
+
+            // Chart animation duration
+            animationDuration: 750,
+
+            // Setup grid
+            grid: {
+                left: 0,
+                right: 30,
+                top: 30,
+                bottom: 0,
+                containLabel: true
+            },
+
+            // Add legend
+            legend: {
+                data: ['Customers', 'Customers2','Returned'],
+                itemHeight: 8,
+                itemGap: 20,
+                textStyle: {
+                    padding: [0, 5]
+                }
+            },
+
+            // Add tooltip
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0,0,0,0.75)',
+                padding: [10, 15],
+                textStyle: {
+                    fontSize: 13,
+                    fontFamily: 'Roboto, sans-serif'
+                },
+                axisPointer: {
+                    type: 'shadow',
+                    shadowStyle: {
+                        color: 'rgba(0,0,0,0.025)'
+                    }
+                }
+            },
+
+            // Horizontal axis
+            xAxis: [{
+                type: 'value',
+                axisLabel: {
+                    color: '#333'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#999'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#eee',
+                        type: 'dashed'
+                    }
+                }
+            }],
+
+            // Vertical axis
+            yAxis: [{
+                type: 'category',
+                /*data: ['Oct', 'Sep', 'Aug', 'July', 'June', 'May', 'Apr', 'Mar', 'Feb', 'Jan'],*/
+                axisLabel: {
+                    color: '#333'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#999'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: ['#eee']
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.015)']
+                    }
+                },
+                EJES
+            }],
+
+            // Add series
+            series: [
+                {
+                    name: 'Customers',
+                    type: 'bar',
+                    barCategoryGap: '40%',
+                    label: {
+                        normal: {
+                            textStyle: {
+                                color: '#252d19'
+                            },
+                            position: 'left',
+                            show: false,
+                            formatter: '{b}'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#6b006f',
+                        }
+                    },
+                    /*data: [1900, 1029, 1602, 2004, 1100, 1800, 2800, 1407, 2200, 900]*/
+                    DATA1
+                },
+                {
+                    name: 'Customers2',
+                    type: 'bar',
+                    barCategoryGap: '40%',
+                    label: {
+                        normal: {
+                            textStyle: {
+                                color: '#682d19'
+                            },
+                            position: 'left',
+                            show: false,
+                            formatter: '{b}'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#6bca6f',
+                        }
+                    },
+                    /*data: [1900, 1029, 1602, 2004, 1100, 1800, 2800, 1407, 2200, 900]*/
+                    DATA2
+                },
+                {
+                    name: 'Returned',
+                    type: 'line',
+                    symbolSize: 7,
+                    silent: true,
+                    
+                    itemStyle: {
+                        normal: {
+                            color: '#2f4553',
+                            borderWidth: 2
+                        }
+                    },
+                    /*data: [100, 100, 800, 1070, 900, 300, 1200, 900, 1200, 200]*/
+                    DATA3
+                }
+            ]
+        });
+    }
+
+    //
+    // Resize charts
+    //
+
+    // Resize function
+    var triggerChartResize = function() {
+        bars_basic_element && bars_basic.resize();
+        bars_stacked_element && bars_stacked.resize();
+        bars_clustered_element && bars_clustered.resize();
+        bars_float_element && bars_float.resize();
+        bars_mix_element && bars_mix.resize();
+        bars_tornado_negative_element && bars_tornado_negative.resize();
+        bars_tornado_staggered_element && bars_tornado_staggered.resize();
+    };
+
+    // On sidebar width change
+    $(document).on('click', '.sidebar-control', function() {
+        setTimeout(function () {
+            triggerChartResize();
+        }, 0);
+    });
+
+    // On window resize
+    var resizeCharts;
+    window.onresize = function () {
+        clearTimeout(resizeCharts);
+        resizeCharts = setTimeout(function () {
+            triggerChartResize();
+        }, 200);
+    };
+};
+
+
+//
+// Return objects assigned to module
+//
+
+return {
+    init: function() {
+        _barsTornadosExamples();
+    }
+}
+}();
+
+
+// Initialize module
+// ------------------------------
+
+document.addEventListener('DOMContentLoaded', function() {
+EchartsBarsTornados.init();
+});
+
+		
+	</script>
+	<style>
+		div.ex1 {
+			overflow: scroll;
+		}
+	</style>
+</head>
+
+<body>
+
+	        <div class="content">
+
+				<div class="row">
+					
+					
+					<div id="contenidos" style="align-content: center; width:100%; justify-items: center;">
+						
+						
+						<div id="campoIncidencias">
+							
+							<div class="card">
+								<div class="card-header header-elements-inline">
+									<h5 class="card-title">Mix bar and line</h5>
+									<div class="header-elements">
+										<div class="list-icons">
+											<a class="list-icons-item" data-action="collapse"></a>
+											<a class="list-icons-item" data-action="reload"></a>
+											<a class="list-icons-item" data-action="remove"></a>
+										</div>
+									</div>
+								</div>
+			
+								<div class="card-body">
+									<div class="chart-container">
+										<div class="chart has-fixed-height" id="bars_mix"></div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+
+					</div>
+				</div>
+			</div>
+			<!-- /content area -->
+
+</body>
+
+</html>

@@ -572,6 +572,7 @@ function Ocultar(){
 	$("#campoUsuarios").hide();
 	$("#campoOpcion").hide();
 	$("#campoParametros").hide();
+	$("#campoEmpleado2").hide();
 	console.log("ocultar");
 }
 
@@ -1304,3 +1305,16 @@ function VarAccion($dat){
 	console.log(listaAcciones);
 	 
 }
+
+function EmpleadoReporte(){
+	console.log("proyecto",$miProyecto);
+	console.log("aniomes",aniomes);
+	console.log("id",$miSuperId);
+
+	Ocultar();
+	$("#campoEmpleado2").show();
+
+	$("#frameEmpleado").html('<iframe src="http://localhost:8001/grafico?a='+$miProyecto+'&a='+aniomes+'" style="width: 100%; height: 400px;"></iframe>');
+}
+
+

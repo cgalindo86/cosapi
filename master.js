@@ -117,11 +117,44 @@ app.get('/inicio', function(req, res){
     
 });
 
+app.get('/grafico', function(req, res){
+	var nom = req.query;
+    //var n="";
+    fs.readFile(__dirname+'/public/view/grafico.html', 'utf8', (error, datos) => {
+        if (error) throw error;
+		console.log("Proyecto", nom.a[0]);
+		console.log("Periodo", nom.a[1]);
+		var matriz = '';
+		async function run(){
+			try{
+				matriz = BD({proyecto:nom.a[0],periodo:nom.a[1]});
+				console.log('matriz',matriz);
+				var d1 = 'data: [1900, 1029, 1602]';
+				var d2 = 'data: [100, 200, 800]';
+				var d3 = 'data: [100, 200, 1200]';
+				var ejeY = "data: ['Oct', 'Nov', 'Dic']"; 
+				datos = datos.replace("DATA1",d1);
+				datos = datos.replace("DATA2",d2);
+				datos = datos.replace("DATA3",d3);
+				datos = datos.replace("EJES",ejeY);
+				res.send(datos);
+			}  catch(err){
+				console.error(err.message);
+			} finally{
+				
+			}
+		}
+		
+		run();
+    });
+    
+});
+
 
 
     	
-function BD2(consulta,data){
-	
+function BD(data){
+	var m='';
 	var connection;
 	async function run(){
 		try{
@@ -131,27 +164,18 @@ function BD2(consulta,data){
 				connectString: "dscope.cosapi.com.pe/desa"
 			});
 
-			var usuario = data.usuario;
-			var password = data.password;
-			var sql = "SELECT * FROM USUARIO WHERE USERNAME = '"+usuario+"'";
-			console.log(usuario + " - " + password + "\n"+sql);
+			var sql = "SELECT * FROM INCIDENCIA WHERE proyecto='"+data.proyecto+"' AND periodo='"+data.periodo+"'";
 			result = await connection.execute(sql);
 			var a;
+			
 			for(a=0; a<result.rows.length; a++){
 				var string=JSON.stringify(result.rows[a]);
 				var json =  JSON.parse(string);
-			
-				if(json[1]!=null){
-					console.log("val1");				
-					io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"ok"});
-								
-				} else {
-					console.log("val2");
-					io.sockets.emit('validacion', {nombre: json[1], id:json[0], resultado:"no ok"});
-							
-				}
+				//console.log(json[3]);
+				m = m + json[3] + "#";
 			}
-			
+			console.log('m1',m);
+			return m;
 		} catch(err){
 			console.error(err.message);
 		} finally{
@@ -163,10 +187,13 @@ function BD2(consulta,data){
 				}
 			}
 		}
-		
-	}
 
+		console.log('m2',m);
+		//return m;
+	}
+	console.log('m3',m);
 	run();
+	
 }     
 
 
@@ -1319,6 +1346,14 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('IncidenciaProyecto', function(data) {
 		BD2("11",data);
+		/*fs.readFile(__dirname+'/public/view/global_assets/js/demo_pages/charts/echarts/bars_tornados.js', 'utf8', (error, datos) => {
+			if (error) throw error;
+			//console.log("El contenido es: ", nom.a[0]);
+			
+			datos = datos.replace("DATA1",'data: [1900, 1029, 1602, 2004, 1100, 1800, 2800, 1407, 2200, 900]');
+			datos = datos.replace("DATA2",'data: [100, 100, 800, 1070, 900, 300, 1200, 900, 1200, 200],');
+			//res.send(datos);
+		});*/
 	});
 
 	socket.on('GuardarIncidencia', function(data) {
