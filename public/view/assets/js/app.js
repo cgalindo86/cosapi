@@ -313,7 +313,7 @@ var App = function () {
     var _componentTooltip = function() {
 
         // Initialize
-        $('[data-popup="tooltip"]').tooltip();
+        //$('[data-popup="tooltip"]').tooltip();
 
         // Demo tooltips, remove in production
         var demoTooltipSelector = '[data-popup="tooltip-demo"]';
@@ -327,7 +327,7 @@ var App = function () {
 
     // Popover
     var _componentPopover = function() {
-        $('[data-popup="popover"]').popover();
+        //$('[data-popup="popover"]').popover();
     };
 
 

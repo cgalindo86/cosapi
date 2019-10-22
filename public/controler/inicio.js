@@ -400,13 +400,14 @@ function init(){
 			console.log(fechaIx+" "+fechaFx);
 
 			ext = codigox.length;
-			
-			var tabla = cabeceraTabla + '<div class="ex1">' + '<table id="tabla" class="table table-bordered table-striped">';
+			//class="table datatable-responsive"
+			//class="table table-bordered table-striped"
+			var tabla = cabeceraTabla + '<div class="ex1">' + '<table id="tabla" class="table datatable-responsive">';
 			tabla = tabla + '<thead><tr style="background:#ffffff;"><td>CODIGO</td><td>APELLIDOS Y NOMBRES</td>';
 			tabla = tabla + '<td>F. INICIO</td><td>F. FIN</td><td>'+anio+'-01</td>';
 			tabla = tabla + '<td>'+anio+'-02</td><td>'+anio+'-03</td><td>'+anio+'-04</td><td>'+anio+'-05</td>';
 			tabla = tabla + '<td>'+anio+'-06</td><td>'+anio+'-07</td><td>'+anio+'-08</td><td>'+anio+'-09</td>';
-			tabla = tabla + '<td>'+anio+'-10</td><td>'+anio+'-11</td><td>'+anio+'-12</td></tr></thead>';
+			tabla = tabla + '<td>'+anio+'-10</td><td>'+anio+'-11</td><td>'+anio+'-12</td><td>Data</td></tr></thead>';
 			tabla = tabla+'<tbody>';
 			
 			var mdata = data.incidencia_prevista;
@@ -499,6 +500,22 @@ function init(){
 				} else {
 					tabla = tabla+'<td><input type="text" id="'+anio+'12'+i+'" maxlength="5" size="5" value="'+ldata[11]+'"></td>';				
 				}
+
+				tabla = tabla + '<td class="text-center">';
+				tabla = tabla + '<div class="list-icons">';
+				tabla = tabla + '<div class="dropdown">';
+				tabla = tabla + '<a href="#" class="list-icons-item" data-toggle="dropdown">';
+				tabla = tabla + '<i class="icon-menu9"></i>';
+				tabla = tabla + '</a>';
+
+				tabla = tabla + '<div class="dropdown-menu dropdown-menu-right">';
+				tabla = tabla + '<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> Export to .pdf</a>';
+				tabla = tabla + '<a href="#" class="dropdown-item"><i class="icon-file-excel"></i> Export to .csv</a>';
+				tabla = tabla + '<a href="#" class="dropdown-item"><i class="icon-file-word"></i> Export to .doc</a>';
+				tabla = tabla + '</div>';
+				tabla = tabla + '</div>';
+				tabla = tabla + '</div>';
+				tabla = tabla + '</td>';
 
 			}
 			tabla = tabla+'</tbody></table></div></div>';
