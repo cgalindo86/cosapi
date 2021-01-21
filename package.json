@@ -10,7 +10,7 @@
     "mysql": "^2.17.1",
     "oracledb": "^4.0.1",
     "soap": "^0.29.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "underscore": "^1.9.1"
   }
 }
